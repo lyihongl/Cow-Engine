@@ -3,6 +3,7 @@
 
 #include <SDL2/SDL.h>
 #include "Engine/Engine.h"
+#include "Engine/Graphics/Shape.h"
 
 int main(int argc, char** argv){
     int x = 4;
@@ -18,27 +19,38 @@ int main(int argc, char** argv){
         480,                               // height, in pixels
         SDL_WINDOW_OPENGL                  // flags - see below
     );
+    SDL_Renderer *renderer = SDL_CreateRenderer(window, -1, SDL_RENDERER_ACCELERATED);
     if (window == NULL) {
         // In the case that the window could not be made...
         printf("Could not create window: %s\n", SDL_GetError());
         return 1;
     }
 
+
     // The window is open: could enter program loop here (see SDL_PollEvent())
 
     SDL_Event e;
     Uint32 windowID = SDL_GetWindowID(window);
     uint8_t running = 1;
+    SofaShape sofashape;
+    double shape_test[8] = {20, 20, 2, 2, 30, 30, 4, 4};
+    sofashape.shape = &shape_test;
+    sofashape.size = 8;
+    sofashape.f = Rect;
+    RendererOptions r;
+    r.a = 100;
+    r.r = 255;
+    r.b = 0;
+    r.g = 0;
     for(;running;) {
         SDL_PollEvent(&e);
-        //printf("%d\r\n", e.window.event);
+        SDL_RenderClear(renderer);
+        RenderShape(&sofashape, window, renderer, &r);
+        //printf("a");
         if(e.window.event == SDL_WINDOWEVENT_CLOSE){
             running = 0;
         }
-        //printf("%d\r\n", SDL_WINDOWEVENT_CLOSE);
-        //if(e.type == 256){
-        //    running = 0;
-        //}
+        SDL_RenderPresent(renderer);
     }
 
     //SDL_Delay(3000);  // Pause execution for 3000 milliseconds, for example
