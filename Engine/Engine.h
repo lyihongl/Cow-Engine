@@ -1,6 +1,5 @@
 #ifndef COW_ENGINE_H
 #define COW_ENGINE_H
-#include "Graphics/Shape.h"
 
 //Functions undefined and left for the user to define
 void GameLoop();

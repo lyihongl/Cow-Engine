@@ -7,7 +7,7 @@ enum ShapeFlags{
 }ShapeFlags;
 
 
-//organization of shape array:
+// organization of shape array:
 // rect: provide corner x, y, w, h
 // circle: provide x y of center and r [x, y, r]
 // line: provide 2 points [x,y,x,y]
@@ -56,11 +56,7 @@ void renderRect(SofaShape *shape, SDL_Renderer *renderer, RendererOptions *r) {
             rect.h = shape -> shape[i];
             break;
         }
-        //printf("HERE");
-        //printf("if: %d", (i > 0 && i%4 == 0));
         if((i+1)%4 == 0) {
-            //printf("Draing rect");
-            //printf("rect: %d %d %d %d", rect.x, rect.y, rect.w, rect.h);
             SDL_SetRenderDrawColor(renderer, r->r, r->g, r->b, r->a);
             SDL_RenderDrawRect(renderer, &rect);
             SDL_SetRenderDrawColor(renderer, 0, 0, 0, 255);
@@ -73,7 +69,11 @@ void renderCircle(SofaShape *shape, SDL_Renderer *renderer, RendererOptions *r) 
 }
 
 void renderLine(SofaShape *shape, SDL_Renderer *renderer, RendererOptions *r) {
-
+    for(unsigned int i = 0; i< (shape -> size)/4; i++) {
+        SDL_SetRenderDrawColor(renderer, r->r, r->g, r->b, r->a);
+        SDL_RenderDrawLine(renderer, shape -> shape[i], shape -> shape[i+1], shape -> shape[i+2], shape -> shape[i+3]);
+        SDL_SetRenderDrawColor(renderer, 0, 0, 0, 255);
+    }
 }
 
 #endif

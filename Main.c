@@ -6,8 +6,8 @@
 #include "Engine/Graphics/Shape.h"
 
 int main(int argc, char** argv){
-    int x = 4;
-    printf("%p\r\n", &x);
+    //int x = 4;
+    //printf("%p\r\n", &x);
     SDL_Window *window;
     SDL_Init(SDL_INIT_EVERYTHING);
     //SDL_Init(SDL_INIT_VIDEO);
@@ -15,8 +15,8 @@ int main(int argc, char** argv){
         "An SDL2 window",                  // window title
         SDL_WINDOWPOS_UNDEFINED,           // initial x position
         SDL_WINDOWPOS_UNDEFINED,           // initial y position
-        640,                               // width, in pixels
-        480,                               // height, in pixels
+        1080,                               // width, in pixels
+        720,                               // height, in pixels
         SDL_WINDOW_OPENGL                  // flags - see below
     );
     SDL_Renderer *renderer = SDL_CreateRenderer(window, -1, SDL_RENDERER_ACCELERATED);
@@ -32,11 +32,24 @@ int main(int argc, char** argv){
     SDL_Event e;
     Uint32 windowID = SDL_GetWindowID(window);
     uint8_t running = 1;
+
+    //shape test for rect
     SofaShape sofashape;
-    double shape_test[8] = {20, 20, 2, 2, 30, 30, 4, 4};
+
+    double shape_test[8] = {20, 20, 2, 2, 30, 30, 6, 4};
+
     sofashape.shape = &shape_test;
     sofashape.size = 8;
     sofashape.f = Rect;
+
+    double line_test[8] = {20, 20, 40, 40, 60, 60, 80, 80};
+
+    SofaShape sofashape2;
+
+    sofashape2.shape = &line_test;
+    sofashape2.size = 8;
+    sofashape2.f = Line;
+
     RendererOptions r;
     r.a = 100;
     r.r = 255;
@@ -46,6 +59,7 @@ int main(int argc, char** argv){
         SDL_PollEvent(&e);
         SDL_RenderClear(renderer);
         RenderShape(&sofashape, window, renderer, &r);
+        RenderShape(&sofashape2, window, renderer, &r);
         //printf("a");
         if(e.window.event == SDL_WINDOWEVENT_CLOSE){
             running = 0;

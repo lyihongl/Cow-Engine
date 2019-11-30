@@ -7,4 +7,8 @@ typedef struct WindowManager{
     SDL_Renderer *render_layer;
 } WindowManager;
 
+void WindowInit(){
+
+}
+
 #endif
