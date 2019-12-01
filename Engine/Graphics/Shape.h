@@ -1,6 +1,7 @@
 #ifndef COW_SHAPE_H 
 #define COW_SHAPE_H
 #include <SDL2/SDL.h>
+#include <stdio.h>
 
 enum ShapeFlags{
     Rect, Circle, Line
@@ -23,6 +24,7 @@ typedef struct RendererOptions{
 
 void RenderShape(SofaShape *shape, SDL_Window *window, SDL_Renderer *renderer, RendererOptions *r){
     //printf("f: %d\r\n",shape -> f);
+    printf("shape size: %d\r\n", shape->size);
     switch(shape -> f){
         case 0:
         renderRect(shape, renderer, r);
@@ -39,7 +41,7 @@ void RenderShape(SofaShape *shape, SDL_Window *window, SDL_Renderer *renderer, R
 
 void renderRect(SofaShape *shape, SDL_Renderer *renderer, RendererOptions *r) {
     SDL_Rect rect;
-    //printf("here2");
+    printf("rendering rect\r\n");
     for(unsigned int i = 0; i < shape -> size; i++) {
         //printf("%d\r\n", i%4);
         switch(i%4){
@@ -57,6 +59,8 @@ void renderRect(SofaShape *shape, SDL_Renderer *renderer, RendererOptions *r) {
             break;
         }
         if((i+1)%4 == 0) {
+            printf("color: %d %d %d %d\r\n", r->r, r->g, r->b, r-> a);
+            printf("rect: %d %d %d %d\r\n", rect.x, rect.y, rect.w, rect.h);
             SDL_SetRenderDrawColor(renderer, r->r, r->g, r->b, r->a);
             SDL_RenderDrawRect(renderer, &rect);
             SDL_SetRenderDrawColor(renderer, 0, 0, 0, 255);
