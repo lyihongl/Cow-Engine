@@ -7,7 +7,7 @@ typedef struct MemoryManager{
     long used_memory[2048];
 } MemoryManager;
 
-void* Managed_Alloc(MemoryManager *m, unsigned int bytes) {
+void* ManagedAlloc(MemoryManager *m, unsigned int bytes) {
     return (void*)malloc(bytes);
 }
 #endif
