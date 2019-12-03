@@ -5,7 +5,8 @@
 
 //Functions undefined and left for the user to define
 
-void GameDataInit(GameData * d);
+void GameDataInit(GameData *d);
+void GameDataFree(GameData *d);
 
 void Tick(GameData *d);
 void Render(GameData *d);
@@ -33,7 +34,7 @@ void GameLoop(GameData *d) {
         SDL_PollEvent(&e);
         Tick(d);
         Render(d);
-        printf("game loop\r\n");
+        //printf("game loop\r\n");
         //RenderShape(&(d->rects), d -> window, d -> r, &(d -> ro));
 
         if(e.window.event == SDL_WINDOWEVENT_CLOSE){

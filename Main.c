@@ -18,7 +18,7 @@ void GameDataInit(GameData * d) {
         SDL_WINDOW_OPENGL                  // flags - see below
     );
     d -> r = SDL_CreateRenderer(d -> window, -1, SDL_RENDERER_ACCELERATED);
-    double temp[8] = {20, 20, 2, 2, 30, 30, 6, 4};
+    double temp[8] = {20, 20, 2, 2, 30, 30, 20, 20};
     double *shape_test = (double*)malloc(sizeof(double)*8);
     for(int i = 0; i<8; i++) {
         shape_test[i] = temp[i];
@@ -28,10 +28,27 @@ void GameDataInit(GameData * d) {
     d -> rects -> shape = shape_test;
     d -> rects -> size = 8;
     d -> rects -> f = Rect;
-    d -> ro -> a = 100;
-    d -> ro -> r = 255;
-    d -> ro -> b = 0;
-    d -> ro -> g = 0;
+    d -> ro -> rgba = (double*)malloc(4*3);
+    d -> ro -> rgba[0] = 0;
+    d -> ro -> rgba[1] = 0;
+    d -> ro -> rgba[2] = 0;
+    d -> ro -> rgba[3] = 0;
+    d -> ro -> rgba[4] = 255;
+    d -> ro -> rgba[5] = 0;
+    d -> ro -> rgba[6] = 0;
+    d -> ro -> rgba[7] = 255;
+    d -> ro -> rgba[8] = 0;
+    d -> ro -> rgba[9] = 255;
+    d -> ro -> rgba[10] = 0;
+    d -> ro -> rgba[11] = 255;
+}
+
+void GameDataFree(GameData *d) {
+    free(d -> rects -> shape);
+    free(d -> ro -> rgba);
+    free(d -> rects);
+    free(d -> ro);
+    free(d);
 }
 
 void Tick(GameData *d){
@@ -46,6 +63,7 @@ int main(int argc, char** argv){
     GameData d;
 
     StartGame(&d);
+    //printf("%d\r\n", __LINE__);
 
     // Clean up
     SDL_DestroyWindow(d.window);
