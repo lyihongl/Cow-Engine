@@ -1,0 +1,3 @@
+[submodule "Engine/log.c"]
+	path = Engine/log.c
+	url = https://github.com/rxi/log.c
