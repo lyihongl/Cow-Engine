@@ -5,6 +5,8 @@
 #include "Engine/Engine.h"
 #include "Engine/Graphics/Shape.h"
 #include "Engine/GameData.h"
+#include "Engine/Debugging/MemoryProfile.h"
+#include "Engine/DataStructures/LinkedList.h"
 
 void GameDataInit(GameData * d) {
     SDL_Init(SDL_INIT_EVERYTHING);
@@ -60,14 +62,19 @@ void Render(GameData *d){
 }
 
 int main(int argc, char** argv){
-    GameData d;
+    int *a = (int*)malloc(sizeof(int));
+    int *b = (int*)malloc(sizeof(int));
+    int test = (int)hashFunctionInt(a, 32);
+    int test2 = (int)hashFunctionInt(b, 32);
+    printf("test: %d %d", test, test2);
+    //GameData d;
 
-    StartGame(&d);
+    //StartGame(&d);
     //printf("%d\r\n", __LINE__);
 
     // Clean up
-    SDL_DestroyWindow(d.window);
-    SDL_Quit();
+    //SDL_DestroyWindow(d.window);
+    //SDL_Quit();
 
     return 0;
 }
