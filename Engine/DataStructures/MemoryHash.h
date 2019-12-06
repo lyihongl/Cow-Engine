@@ -1,6 +1,7 @@
 #ifndef COW_MEMORYHASH_H
 #define COW_MEMORY_HASH_H
 #include "LinkedList.h"
+#include "../log.c/src/log.h"
 #include <stdint.h>
 #include <stdio.h>
 #include <stdlib.h>
@@ -15,12 +16,21 @@ typedef struct MemHashMap {
 void InitMemHash(MemHashMap *mhp) {
     mhp -> cap = 32;
     mhp -> elements = 0;
-    mhp -> table = (LinkedList**)malloc(mhp -> cap*sizeof(LinkedList*));
+    //mhp -> table = (LinkedList**)malloc(mhp -> cap*sizeof(LinkedList*));
+    mhp -> table = (LinkedList**)calloc(1, mhp -> cap*sizeof(LinkedList*));
 }
 
 void MemHashAdd(MemHashMap *mhp, void *key, void *data) {
+    printf("here");
+    fflush(stdout);
+    log_debug("cap: %d", mhp -> cap);
+    uint64_t hash = hashFunctionInt(key, mhp -> cap);
+    //Node *n = InitNode(data);
+    log_debug("here");
+    fflush(stdout);
+    //LLInsert(mhp -> table[hash], n);
     // upsize
-    printf("hello\r\n");
+    //printf("hello\r\n");
     //fflush(stdout);
     //if(mhp -> cap - mhp -> elements < 5){
         //mhp -> cap = mhp->cap * 2;
@@ -50,22 +60,35 @@ uint64_t hashFunctionInt(void *addr, int cap) {
      * Austin Appleby's MurmurHash2, hardcoded to process a single
      * 64-bit input
      */
+    log_debug("here");
     uint64_t const a = 0xc6a4a7935bd1e995;
+    //log_debug("here");
     uint64_t const b = 47;
+    log_debug("here");
 
     register uint64_t h = 8 * a;
+    //log_debug("here");
     register uint64_t k = (uint64_t)(addr);
+    //log_debug("here");
  
     k *= a;
+    //log_debug("here");
     k ^= k >> b;
+    //log_debug("here");
     k *= a;
+    //log_debug("here");
 
     h ^= k;
+    //log_debug("here");
     h *= a * a;
+    //log_debug("here");
 
     h ^= h >> b;
+    //log_debug("here");
     h *= a;
+    //log_debug("here");
     h ^= h >> b;
+    //log_debug("here");
 
     return h % cap;
 }

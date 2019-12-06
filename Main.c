@@ -7,6 +7,7 @@
 #include "Engine/GameData.h"
 #include "Engine/Debugging/MemoryProfile.h"
 #include "Engine/DataStructures/LinkedList.h"
+#include "Engine/log.c/src/log.h"
 
 void GameDataInit(GameData * d) {
     SDL_Init(SDL_INIT_EVERYTHING);
@@ -66,17 +67,31 @@ int main(int argc, char** argv){
     int *b = (int*)malloc(sizeof(int));
     int test = (int)hashFunctionInt(a, 32);
     int test2 = (int)hashFunctionInt(b, 32);
+    // TESTING HASH MAP
+
+    MemHashMap *mhp = (MemHashMap*)calloc(1, sizeof(mhp));
+    InitMemHash(mhp);
+    MemHashAdd(mhp, a, b);
+
+    log_debug("test: %p", mhp);
+    log_debug("test");
+
+    // END TESTING
     //MemHashMap *mhp = (MemHashMap*)calloc(1, sizeof(mhp));
     //InitMemHash(mhp);
     //int a = 5;
     //MemHashAdd(mhp, a, a);
-    LinkedList *l = (LinkedList*)calloc(1, sizeof(LinkedList));
-    Node *temp = (Node*)calloc(1, sizeof(Node));
-    temp -> data = a;
-    LLInsert(l, temp);
-    printf("test: %p \r\n", l -> head -> data);
-    printf("test: %d %d\r\n", test, test2);
-    fflush(stdout);
+    //LinkedList *l = (LinkedList*)calloc(1, sizeof(LinkedList));
+    //Node *temp = (Node*)calloc(1, sizeof(Node));
+    //Node *temp2 = (Node*)calloc(1, sizeof(Node));
+    //temp -> data = a;
+    //temp2 -> data = b;
+    //LLInsert(l, temp);
+    //LLInsert(l, temp2);
+    //printf("test: %p \r\n", l -> head -> data);
+    //printf("test: %p \r\n", l -> tail -> data);
+    //printf("test: %p %p\r\n", a, b);
+    //fflush(stdout);
     //Node *temp = (Node*)malloc(sizeof(Node));
     //temp -> data = a;
     //LLInsert(l, temp);

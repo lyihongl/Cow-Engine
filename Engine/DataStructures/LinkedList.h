@@ -11,7 +11,14 @@ typedef struct Node {
 
 typedef struct LinkedList {
     struct Node *head;
+    struct Node *tail;
 } LinkedList;
+
+Node* InitNode(void* data){
+    Node *n = (Node*)calloc(1, sizeof(Node));
+    n -> data = data;
+    return n;
+}
 
 void LLFree(LinkedList *l){
     Node* head = l -> head -> next;
@@ -26,6 +33,7 @@ void LLFree(LinkedList *l){
 void LLInsert(LinkedList *l, Node *n) {
     if(l-> head == NULL){
         l -> head = n;
+        l -> tail = n;
     } else {
         n -> next = l -> head;
         l -> head -> prev = n;
