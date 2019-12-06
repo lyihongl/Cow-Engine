@@ -1,10 +1,11 @@
 #ifndef COW_LINKEDLIST_H
 #define COW_LINKEDLIST_H
 #include <stdlib.h>
-#include "../Debugging/MemoryProfile.h"
+//#include "../Debugging/MemoryProfile.h"
 
 typedef struct Node {
     struct Node *next;
+    struct Node *prev;
     void *data;
 } Node;
 
@@ -16,15 +17,20 @@ void LLFree(LinkedList *l){
     Node* head = l -> head -> next;
     Node* del = l -> head;
     while(del != NULL) {
-        Cow_free(del);
+        free(del);
         del = head;
         head = head->next;
     }
 }
 
 void LLInsert(LinkedList *l, Node *n) {
-    n -> next = l -> head;
-    l -> head = n;
+    if(l-> head == NULL){
+        l -> head = n;
+    } else {
+        n -> next = l -> head;
+        l -> head -> prev = n;
+        l -> head = n;
+    }
 }
 
 #endif

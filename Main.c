@@ -66,7 +66,23 @@ int main(int argc, char** argv){
     int *b = (int*)malloc(sizeof(int));
     int test = (int)hashFunctionInt(a, 32);
     int test2 = (int)hashFunctionInt(b, 32);
-    printf("test: %d %d", test, test2);
+    //MemHashMap *mhp = (MemHashMap*)calloc(1, sizeof(mhp));
+    //InitMemHash(mhp);
+    //int a = 5;
+    //MemHashAdd(mhp, a, a);
+    LinkedList *l = (LinkedList*)calloc(1, sizeof(LinkedList));
+    Node *temp = (Node*)calloc(1, sizeof(Node));
+    temp -> data = a;
+    LLInsert(l, temp);
+    printf("test: %p \r\n", l -> head -> data);
+    printf("test: %d %d\r\n", test, test2);
+    fflush(stdout);
+    //Node *temp = (Node*)malloc(sizeof(Node));
+    //temp -> data = a;
+    //LLInsert(l, temp);
+    //printf("%p\r\n", l -> head -> data);
+    //printf("test: %p", mhp -> table[hashFunctionInt(a, mhp -> cap)] -> head -> data);
+    //fflush(stdout);
     //GameData d;
 
     //StartGame(&d);
