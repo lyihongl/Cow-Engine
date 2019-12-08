@@ -13,7 +13,7 @@ typedef struct MemHashMap {
     LinkedList **table;
 } MemHashMap;
 
-void InitMemHash(MemHashMap *mhp) {
+void MemHashInit(MemHashMap *mhp) {
     mhp -> cap = 32;
     mhp -> elements = 0;
     //mhp -> table = (LinkedList**)malloc(mhp -> cap*sizeof(LinkedList*));
@@ -21,8 +21,10 @@ void InitMemHash(MemHashMap *mhp) {
 }
 
 void MemHashAdd(MemHashMap *mhp, void *key, void *data) {
+    // check if upsize or downsize of table is needed
+
     uint64_t hash = hashFunctionInt(key, mhp -> cap);
-    Node *n = InitNode(data);
+    Node *n = NodeInit(data);
     //Node *n = (Node*)calloc(1, sizeof(Node));
     //n -> data = data;
     log_debug("hash: %d", hash);
@@ -30,34 +32,9 @@ void MemHashAdd(MemHashMap *mhp, void *key, void *data) {
 
     LLInit(&(mhp -> table[hash]));
     LLInsert(mhp -> table[hash], n);
-    //Node *n = InitNode(data);
+    //Node *n = NodeInit(data);
     log_debug("hash: %d", hash);
     fflush(stdout);
-    //LLInsert(mhp -> table[hash], n);
-    // upsize
-    //printf("hello\r\n");
-    //fflush(stdout);
-    //if(mhp -> cap - mhp -> elements < 5){
-        //mhp -> cap = mhp->cap * 2;
-        //LinkedList **temp = (LinkedList**)malloc(mhp -> cap*sizeof(LinkedList*));
-        //for(int i = 0; i < mhp -> elements; i++) {
-            //temp[i] = mhp -> table[i];
-        //}
-        //free(mhp -> table);
-        //mhp -> table = temp;
-    //}
-
-    //printf("hello\r\n");
-    //fflush(stdout);
-
-    //if(mhp -> cap - mhp -> elements > (mhp -> cap)/2 + 4){
-        ////mhp -> cap = mhp -> cap / 2;
-        ////LinkedList **temp = (LinekdList**)
-    //}
-    //int hash = hashFunctionInt(key, mhp -> cap);
-    //Node *n = (Node*)malloc(sizeof(Node));
-    //n -> data = data;
-    //LLInsert(mhp -> table[hash], n);
 }
 
 uint64_t hashFunctionInt(void *addr, int cap) {

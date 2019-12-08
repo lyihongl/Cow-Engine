@@ -3,6 +3,10 @@
 #include <stdlib.h>
 #include "../DataStructures/MemoryHash.h"
 #define MEM_DEBUG 0
+#if MEM_DEBUG
+#define malloc(x) Cow_malloc(x)
+#define calloc(x, y) Cow_calloc(x, y)
+#endif
 
 void* Cow_malloc(int size);
 void* Cow_malloc(int size){

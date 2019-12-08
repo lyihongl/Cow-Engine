@@ -8,6 +8,8 @@
 #include "Engine/Debugging/MemoryProfile.h"
 #include "Engine/DataStructures/LinkedList.h"
 #include "Engine/log.c/src/log.h"
+#include "Engine/DataStructures/Tests/LinkedListTest.h"
+
 
 void GameDataInit(GameData * d) {
     SDL_Init(SDL_INIT_EVERYTHING);
@@ -69,8 +71,9 @@ int main(int argc, char** argv){
     int test2 = (int)hashFunctionInt(b, 32);
     // TESTING HASH MAP
 
+    printf("linked list test: %d\r\n", LLTest());
     MemHashMap *mhp = (MemHashMap*)calloc(1, sizeof(mhp));
-    InitMemHash(mhp);
+    MemHashInit(mhp);
     MemHashAdd(mhp, a, b);
 
     log_debug("key: %p data: %p", a, b);

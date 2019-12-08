@@ -16,16 +16,17 @@ typedef struct LinkedList {
 } LinkedList;
 
 
-void LLInit(LinkedList** l){
-    log_debug("linked list init: %p", l);
+void LLInit(LinkedList **l){
     if(*l == NULL){
         *l = (LinkedList*)calloc(1, sizeof(LinkedList));
     } else {
         return;
     }
+    (*l) -> head = NULL;
+    (*l)-> tail = NULL;
 }
 
-Node* InitNode(void* data){
+Node* NodeInit(void* data){
     Node *n = (Node*)calloc(1, sizeof(Node));
     n -> data = data;
     return n;
@@ -45,6 +46,8 @@ void LLInsert(LinkedList *l, Node *n) {
     if(l-> head == NULL){
         l -> head = n;
         l -> tail = n;
+        l -> tail -> next = NULL;
+        l -> head -> prev = NULL;
     } else {
         n -> next = l -> head;
         l -> head -> prev = n;
