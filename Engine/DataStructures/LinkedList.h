@@ -1,6 +1,7 @@
 #ifndef COW_LINKEDLIST_H
 #define COW_LINKEDLIST_H
 #include <stdlib.h>
+#include "../log.c/src/log.h"
 //#include "../Debugging/MemoryProfile.h"
 
 typedef struct Node {
@@ -13,6 +14,16 @@ typedef struct LinkedList {
     struct Node *head;
     struct Node *tail;
 } LinkedList;
+
+
+void LLInit(LinkedList** l){
+    log_debug("linked list init: %p", l);
+    if(*l == NULL){
+        *l = (LinkedList*)calloc(1, sizeof(LinkedList));
+    } else {
+        return;
+    }
+}
 
 Node* InitNode(void* data){
     Node *n = (Node*)calloc(1, sizeof(Node));

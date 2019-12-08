@@ -21,12 +21,17 @@ void InitMemHash(MemHashMap *mhp) {
 }
 
 void MemHashAdd(MemHashMap *mhp, void *key, void *data) {
-    printf("here");
-    fflush(stdout);
-    log_debug("cap: %d", mhp -> cap);
     uint64_t hash = hashFunctionInt(key, mhp -> cap);
+    Node *n = InitNode(data);
+    //Node *n = (Node*)calloc(1, sizeof(Node));
+    //n -> data = data;
+    log_debug("hash: %d", hash);
+    fflush(stdout);
+
+    LLInit(&(mhp -> table[hash]));
+    LLInsert(mhp -> table[hash], n);
     //Node *n = InitNode(data);
-    log_debug("here");
+    log_debug("hash: %d", hash);
     fflush(stdout);
     //LLInsert(mhp -> table[hash], n);
     // upsize
@@ -72,23 +77,15 @@ uint64_t hashFunctionInt(void *addr, int cap) {
     //log_debug("here");
  
     k *= a;
-    //log_debug("here");
     k ^= k >> b;
-    //log_debug("here");
     k *= a;
-    //log_debug("here");
 
     h ^= k;
-    //log_debug("here");
     h *= a * a;
-    //log_debug("here");
 
     h ^= h >> b;
-    //log_debug("here");
     h *= a;
-    //log_debug("here");
     h ^= h >> b;
-    //log_debug("here");
 
     return h % cap;
 }

@@ -73,6 +73,11 @@ int main(int argc, char** argv){
     InitMemHash(mhp);
     MemHashAdd(mhp, a, b);
 
+    log_debug("key: %p data: %p", a, b);
+    log_debug("data retrieved: %p", mhp -> table[hashFunctionInt(a, 32)] -> head -> data);
+
+
+
     log_debug("test: %p", mhp);
     log_debug("test");
 
