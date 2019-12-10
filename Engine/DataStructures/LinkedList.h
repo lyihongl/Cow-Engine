@@ -13,17 +13,20 @@ typedef struct Node {
 typedef struct LinkedList {
     struct Node *head;
     struct Node *tail;
+    int size;
 } LinkedList;
 
 
 void LLInit(LinkedList **l){
+    log_debug("Initializing linked list");
     if(*l == NULL){
         *l = (LinkedList*)calloc(1, sizeof(LinkedList));
     } else {
         return;
     }
     (*l) -> head = NULL;
-    (*l)-> tail = NULL;
+    (*l) -> tail = NULL;
+    (*l) -> size = 0;
 }
 
 Node* NodeInit(void* data){
@@ -53,6 +56,7 @@ void LLInsert(LinkedList *l, Node *n) {
         l -> head -> prev = n;
         l -> head = n;
     }
+    l -> size++;
 }
 
 #endif

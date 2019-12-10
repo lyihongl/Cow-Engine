@@ -1,7 +1,10 @@
+#ifndef COW_LINKEDLISTTEST_H
+#define COW_LINKEDLISTTEST_H
 #include "../LinkedList.h"
 #include <stdio.h>
 #include "../../log.c/src/log.h"
 
+//NOTE: this test 100% has a memory leak, don't use it in prod
 int LLTest(){
     LinkedList *l = NULL;
     log_debug("here");
@@ -25,3 +28,4 @@ int LLTest(){
     
     return 0;
 }
+#endif

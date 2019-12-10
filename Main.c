@@ -9,6 +9,7 @@
 #include "Engine/DataStructures/LinkedList.h"
 #include "Engine/log.c/src/log.h"
 #include "Engine/DataStructures/Tests/LinkedListTest.h"
+#include "Engine/DataStructures/Tests/MemoryHashTest.h"
 
 
 void GameDataInit(GameData * d) {
@@ -83,6 +84,7 @@ int main(int argc, char** argv){
 
     log_debug("test: %p", mhp);
     log_debug("test");
+    MemHashUpsizeTest();
 
     // END TESTING
     //MemHashMap *mhp = (MemHashMap*)calloc(1, sizeof(mhp));

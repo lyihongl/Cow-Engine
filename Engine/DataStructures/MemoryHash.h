@@ -1,5 +1,5 @@
 #ifndef COW_MEMORYHASH_H
-#define COW_MEMORY_HASH_H
+#define COW_MEMORYHASH_H
 #include "LinkedList.h"
 #include "../log.c/src/log.h"
 #include <stdint.h>
@@ -16,24 +16,46 @@ typedef struct MemHashMap {
 void MemHashInit(MemHashMap *mhp) {
     mhp -> cap = 32;
     mhp -> elements = 0;
-    //mhp -> table = (LinkedList**)malloc(mhp -> cap*sizeof(LinkedList*));
     mhp -> table = (LinkedList**)calloc(1, mhp -> cap*sizeof(LinkedList*));
 }
 
 void MemHashAdd(MemHashMap *mhp, void *key, void *data) {
     // check if upsize or downsize of table is needed
 
-    uint64_t hash = hashFunctionInt(key, mhp -> cap);
-    Node *n = NodeInit(data);
-    //Node *n = (Node*)calloc(1, sizeof(Node));
-    //n -> data = data;
-    log_debug("hash: %d", hash);
-    fflush(stdout);
+    // if there are less than 5 spaces left in the map
+    if(mhp -> cap - mhp -> elements < 5){
+        //upsize  
+        LinkedList **temp = (LinkedList**)malloc(mhp -> cap*2*sizeof(LinkedList*));
+        for(int i = 0; i<mhp -> elements; i++) {
+            temp[i] = mhp -> table[i];
+        }
+        free(mhp -> table);
+        mhp -> table = temp;
+        mhp -> cap = mhp->cap*2;
+        log_debug("upsizing");
+    }
 
+    // if we can reduce the size of the map by half and there are still 5 empty left
+    if(mhp -> cap - mhp -> elements > (mhp->cap)/2 + 5) {
+        //downsize
+    }
+
+    uint64_t hash = hashFunctionInt(key, mhp -> cap);
+
+    Node *n = NodeInit(data);
+
+    //log_debug("hash: %d", hash);
+    fflush(stdout);
+    if(mhp -> table[hash] == NULL){
+        mhp -> elements++;
+    }
+
+    //insert data into data table located at hash(key)
     LLInit(&(mhp -> table[hash]));
     LLInsert(mhp -> table[hash], n);
-    //Node *n = NodeInit(data);
-    log_debug("hash: %d", hash);
+
+
+    //log_debug("hash: %d", hash);
     fflush(stdout);
 }
 
@@ -42,11 +64,11 @@ uint64_t hashFunctionInt(void *addr, int cap) {
      * Austin Appleby's MurmurHash2, hardcoded to process a single
      * 64-bit input
      */
-    log_debug("here");
+    //log_debug("here");
     uint64_t const a = 0xc6a4a7935bd1e995;
     //log_debug("here");
     uint64_t const b = 47;
-    log_debug("here");
+    //log_debug("here");
 
     register uint64_t h = 8 * a;
     //log_debug("here");
