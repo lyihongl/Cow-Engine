@@ -18,7 +18,7 @@ typedef struct LinkedList {
 
 
 void LLInit(LinkedList **l){
-    log_debug("Initializing linked list");
+    //log_debug("Initializing linked list");
     if(*l == NULL){
         *l = (LinkedList*)calloc(1, sizeof(LinkedList));
     } else {

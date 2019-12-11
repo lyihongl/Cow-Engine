@@ -25,14 +25,17 @@ void MemHashAdd(MemHashMap *mhp, void *key, void *data) {
     // if there are less than 5 spaces left in the map
     if(mhp -> cap - mhp -> elements < 5){
         //upsize  
-        LinkedList **temp = (LinkedList**)malloc(mhp -> cap*2*sizeof(LinkedList*));
-        for(int i = 0; i<mhp -> elements; i++) {
-            temp[i] = mhp -> table[i];
+        LinkedList **temp = (LinkedList**)calloc(1, mhp -> cap*2*sizeof(LinkedList*));
+        for(int i = 0; i<mhp -> cap; i++) {
+            if(mhp -> table[i] != NULL){
+                temp[i] = mhp -> table[i];
+            }
         }
         free(mhp -> table);
         mhp -> table = temp;
         mhp -> cap = mhp->cap*2;
         log_debug("upsizing");
+        log_debug("cap: %d", mhp->cap);
     }
 
     // if we can reduce the size of the map by half and there are still 5 empty left
@@ -41,22 +44,25 @@ void MemHashAdd(MemHashMap *mhp, void *key, void *data) {
     }
 
     uint64_t hash = hashFunctionInt(key, mhp -> cap);
+    int x = 0;
+    for(int i = 0; i<mhp->cap; i++){
+        if(mhp -> table[i] != NULL){
+            x++;
+        }
+    }
+
+    log_debug("elements: %d", x);
 
     Node *n = NodeInit(data);
 
-    //log_debug("hash: %d", hash);
-    fflush(stdout);
     if(mhp -> table[hash] == NULL){
+        LLInit(&(mhp -> table[hash]));
         mhp -> elements++;
     }
 
     //insert data into data table located at hash(key)
-    LLInit(&(mhp -> table[hash]));
     LLInsert(mhp -> table[hash], n);
 
-
-    //log_debug("hash: %d", hash);
-    fflush(stdout);
 }
 
 uint64_t hashFunctionInt(void *addr, int cap) {

@@ -13,10 +13,15 @@ short MemHashUpsizeTest(){
         int * a = (int*)malloc(sizeof(int));
         MemHashAdd(m, a, &a);
     }
+    int x = 0;
     for(int i = 0; i<64; i++){
-        if(m->table[i] != NULL)
-            log_debug("val: %p size: %d", m->table[i]->head, m->table[i]->size);
+        if(m->table[i] != NULL){
+            log_debug("i: %d val: %p size: %d", i, m->table[i]->head, m->table[i]->size);
+            x++;
+        }
     }
+    log_debug("total values: %d", x);
+    log_debug("elements: %d", m->elements);
     log_debug("Got here");
     return 0;
 }
