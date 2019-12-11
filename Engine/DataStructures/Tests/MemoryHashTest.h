@@ -16,7 +16,7 @@ short MemHashUpsizeTest(){
     int x = 0;
     for(int i = 0; i<64; i++){
         if(m->table[i] != NULL){
-            log_debug("i: %d val: %p size: %d", i, m->table[i]->head, m->table[i]->size);
+            //log_debug("i: %d key: %p val: %p size: %d", i, (m->table[i] -> head->data[0]), (m->table[i]->head->data[1]), m->table[i]->size);
             x++;
         }
     }

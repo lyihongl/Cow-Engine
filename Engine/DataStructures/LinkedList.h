@@ -48,6 +48,7 @@ void LLFree(LinkedList *l){
 void LLInsert(LinkedList *l, Node *n) {
     if(l-> head == NULL){
         l -> head = n;
+        log_debug("head: %p", l->head);
         l -> tail = n;
         l -> tail -> next = NULL;
         l -> head -> prev = NULL;

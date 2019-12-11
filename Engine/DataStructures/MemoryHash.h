@@ -6,7 +6,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 
-uint64_t hashFunctionInt(void *addr, int cap);
+uint64_t hashFunctionInt(void *addr);
 typedef struct MemHashMap {
     int cap;
     int elements;
@@ -38,22 +38,22 @@ void MemHashAdd(MemHashMap *mhp, void *key, void *data) {
         log_debug("cap: %d", mhp->cap);
     }
 
-    // if we can reduce the size of the map by half and there are still 5 empty left
-    if(mhp -> cap - mhp -> elements > (mhp->cap)/2 + 5) {
-        //downsize
-    }
+    uint64_t hash = hashFunctionInt(key) % mhp -> cap;
+    //int x = 0;
+    //for(int i = 0; i<mhp->cap; i++){
+    //    if(mhp -> table[i] != NULL){
+    //        x++;
+    //    }
+    //}
 
-    uint64_t hash = hashFunctionInt(key, mhp -> cap);
-    int x = 0;
-    for(int i = 0; i<mhp->cap; i++){
-        if(mhp -> table[i] != NULL){
-            x++;
-        }
-    }
-
-    log_debug("elements: %d", x);
-
-    Node *n = NodeInit(data);
+    void** _data = calloc(2, sizeof(void*));
+    _data[0] = key;
+    _data[1] = data;
+    log_debug("here");
+    Node *n = NodeInit(_data);
+    log_debug("Node val: %p", n);
+    log_debug("Data: %p", data);
+    log_debug("node data: %p", n->data);
 
     if(mhp -> table[hash] == NULL){
         LLInit(&(mhp -> table[hash]));
@@ -62,10 +62,20 @@ void MemHashAdd(MemHashMap *mhp, void *key, void *data) {
 
     //insert data into data table located at hash(key)
     LLInsert(mhp -> table[hash], n);
+    log_debug("Hash head data: %p", ((void**)(mhp -> table[hash] -> head -> data))[1]);
+}
+
+void MemHashRemove(MemHashMap *mhp, void *key){
+    //if we can reduce the size of the map by 1/2, and there are still 5 slots remaining
+
+    uint64_t hash = hashFunctionInt(key) % mhp -> cap;
+}
+
+void* MemHashGet(void* key){
 
 }
 
-uint64_t hashFunctionInt(void *addr, int cap) {
+uint64_t hashFunctionInt(void *addr) {
     /* 
      * Austin Appleby's MurmurHash2, hardcoded to process a single
      * 64-bit input
@@ -92,7 +102,7 @@ uint64_t hashFunctionInt(void *addr, int cap) {
     h *= a;
     h ^= h >> b;
 
-    return h % cap;
+    return h;
 }
 
 uint32_t hashFunctionStr(const char *key, uint32_t len, uint32_t seed) {
