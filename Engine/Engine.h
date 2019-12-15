@@ -16,7 +16,6 @@ void StartGame(GameData *d) {
     if (d -> window == NULL) {
         // In the case that the window could not be made...
         printf("Could not create window: %s\n", SDL_GetError());
-        return 1;
     }
     GameLoop(d);
 
