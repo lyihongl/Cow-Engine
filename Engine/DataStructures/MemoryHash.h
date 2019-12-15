@@ -67,6 +67,15 @@ void MemHashAdd(MemHashMap *mhp, void *key, void *data) {
 
 void MemHashRemove(MemHashMap *mhp, void *key){
     //if we can reduce the size of the map by 1/2, and there are still 5 slots remaining
+    //if( mhp -> elements < (mhp -> cap)/2 - 5) {
+    //    LinkedList** temp = (LinkedList**)calloc(1, ((mhp -> cap)/2)*sizeof(LinkedList*));
+    //    int r_i = 0;
+    //    for(int i = 0; i< mhp -> cap; i++){
+    //        if(mhp -> table[i] != NULL){
+    //            temp[r_i] = mhp->table[i];
+    //        }
+    //    }
+    //}
 
     uint64_t hash = hashFunctionInt(key) % mhp -> cap;
 }

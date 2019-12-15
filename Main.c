@@ -68,8 +68,8 @@ void Render(GameData *d){
 int main(int argc, char** argv){
     int *a = (int*)malloc(sizeof(int));
     int *b = (int*)malloc(sizeof(int));
-    int test = (int)hashFunctionInt(a, 32);
-    int test2 = (int)hashFunctionInt(b, 32);
+    int test = (int)hashFunctionInt(a)%32;
+    int test2 = (int)hashFunctionInt(b)%32;
     // TESTING HASH MAP
 
     printf("linked list test: %d\r\n", LLTest());
@@ -78,7 +78,7 @@ int main(int argc, char** argv){
     MemHashAdd(mhp, a, b);
 
     log_debug("key: %p data: %p", a, b);
-    log_debug("data retrieved: %p", mhp -> table[hashFunctionInt(a, 32)] -> head -> data);
+    log_debug("data retrieved: %p", mhp -> table[hashFunctionInt(a)%32] -> head -> data);
 
 
 
