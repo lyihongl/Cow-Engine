@@ -23,8 +23,6 @@ void StartGame(GameData *d) {
 }
 void GameLoop(GameData *d) {
 
-    //GameData d;
-    //StartGame(&d);
     SDL_Event e;
     uint8_t running = 1;
 
@@ -34,7 +32,6 @@ void GameLoop(GameData *d) {
         SDL_PollEvent(&e);
         Tick(d);
         Render(d);
-        //printf("game loop\r\n");
         //RenderShape(&(d->rects), d -> window, d -> r, &(d -> ro));
 
         if(e.window.event == SDL_WINDOWEVENT_CLOSE){

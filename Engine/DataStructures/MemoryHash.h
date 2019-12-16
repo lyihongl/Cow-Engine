@@ -13,14 +13,19 @@ typedef struct MemHashMap {
     LinkedList **table;
 } MemHashMap;
 
+/**
+ * Initializes the HashMap used by the memory logger
+ */
 void MemHashInit(MemHashMap *mhp) {
     mhp -> cap = 32;
     mhp -> elements = 0;
     mhp -> table = (LinkedList**)calloc(1, mhp -> cap*sizeof(LinkedList*));
 }
 
+/**
+ * Add an element to the MemHashMap, will automatically upsize when needed
+ */
 void MemHashAdd(MemHashMap *mhp, void *key, void *data) {
-    // check if upsize or downsize of table is needed
 
     // if there are less than 5 spaces left in the map
     if(mhp -> cap - mhp -> elements < 5){
@@ -39,21 +44,15 @@ void MemHashAdd(MemHashMap *mhp, void *key, void *data) {
     }
 
     uint64_t hash = hashFunctionInt(key) % mhp -> cap;
-    //int x = 0;
-    //for(int i = 0; i<mhp->cap; i++){
-    //    if(mhp -> table[i] != NULL){
-    //        x++;
-    //    }
-    //}
 
     void** _data = calloc(2, sizeof(void*));
     _data[0] = key;
     _data[1] = data;
-    log_debug("here");
     Node *n = NodeInit(_data);
-    log_debug("Node val: %p", n);
-    log_debug("Data: %p", data);
-    log_debug("node data: %p", n->data);
+
+    //log_debug("Node val: %p", n);
+    //log_debug("Data: %p", data);
+    //log_debug("node data: %p", n->data);
 
     if(mhp -> table[hash] == NULL){
         LLInit(&(mhp -> table[hash]));
@@ -62,28 +61,27 @@ void MemHashAdd(MemHashMap *mhp, void *key, void *data) {
 
     //insert data into data table located at hash(key)
     LLInsert(mhp -> table[hash], n);
-    log_debug("Hash head data: %p", ((void**)(mhp -> table[hash] -> head -> data))[1]);
+    //log_debug("Hash head data: %p", ((void**)(mhp -> table[hash] -> head -> data))[1]);
 }
 
+/**
+ * Remove element from MemHashMap, will not downsize
+ */
 void MemHashRemove(MemHashMap *mhp, void *key){
-    //if we can reduce the size of the map by 1/2, and there are still 5 slots remaining
-    //if( mhp -> elements < (mhp -> cap)/2 - 5) {
-    //    LinkedList** temp = (LinkedList**)calloc(1, ((mhp -> cap)/2)*sizeof(LinkedList*));
-    //    int r_i = 0;
-    //    for(int i = 0; i< mhp -> cap; i++){
-    //        if(mhp -> table[i] != NULL){
-    //            temp[r_i] = mhp->table[i];
-    //        }
-    //    }
-    //}
-
+    // not going downsize hash since thats just a pain
     uint64_t hash = hashFunctionInt(key) % mhp -> cap;
+    if(mhp -> table[hash] -> size == 1) {
+        LLPopHead(mhp -> table[hash]);
+    }
 }
 
 void* MemHashGet(void* key){
 
 }
 
+/**
+ * Uses a memory address as key for hash
+ */
 uint64_t hashFunctionInt(void *addr) {
     /* 
      * Austin Appleby's MurmurHash2, hardcoded to process a single

@@ -60,4 +60,10 @@ void LLInsert(LinkedList *l, Node *n) {
     l -> size++;
 }
 
+void LLPopHead(LinkedList* l){
+    Node* temp = l->head;
+    l -> head = l -> head -> next;
+    free(temp);
+}
+
 #endif

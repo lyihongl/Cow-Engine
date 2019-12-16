@@ -8,7 +8,7 @@ struct GameData{
     // fill in definition here
     SDL_Window *window;
     SDL_Renderer *r;
-    SofaShape *rects;
+    SofAShape *rects;
     RendererOptions *ro;
 };
 #endif

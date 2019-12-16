@@ -29,11 +29,11 @@ void GameDataInit(GameData * d) {
     for(int i = 0; i<8; i++) {
         shape_test[i] = temp[i];
     }
-    d -> rects = (SofaShape*)malloc(sizeof(SofaShape));
+    d -> rects = (SofAShape*)malloc(sizeof(SofAShape));
     d -> ro = (RendererOptions*)malloc(sizeof(RendererOptions));
-    d -> rects -> shape = shape_test;
-    d -> rects -> size = 8;
-    d -> rects -> f = Rect;
+    d -> rects -> P_shape = shape_test;
+    d -> rects -> Size = 8;
+    d -> rects -> F = Rect;
     d -> ro -> rgba = (double*)malloc(4*3);
     d -> ro -> rgba[0] = 0;
     d -> ro -> rgba[1] = 0;
@@ -50,7 +50,7 @@ void GameDataInit(GameData * d) {
 }
 
 void GameDataFree(GameData *d) {
-    free(d -> rects -> shape);
+    free(d -> rects -> P_shape);
     free(d -> ro -> rgba);
     free(d -> rects);
     free(d -> ro);
@@ -85,6 +85,8 @@ int main(int argc, char** argv){
     log_debug("test: %p", mhp);
     log_debug("test");
     MemHashUpsizeTest();
+    GameData d;
+    StartGame(&d);
 
     // END TESTING
     //MemHashMap *mhp = (MemHashMap*)calloc(1, sizeof(mhp));
