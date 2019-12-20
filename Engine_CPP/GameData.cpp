@@ -1,27 +1,32 @@
 #include "GameData.hpp"
 
-GameData::GameData(): 
-    p_window(std::unique_ptr<SDL_Window, decltype(&SDL_DestroyWindow)>(SDL_CreateWindow(
-        "An SDL2 window",                  // window title
-        SDL_WINDOWPOS_UNDEFINED,           // initial x position
-        SDL_WINDOWPOS_UNDEFINED,           // initial y position
-        1080,                               // width, in pixels
-        720,                               // height, in pixels
-        SDL_WINDOW_OPENGL     
-    ), SDL_DestroyWindow
-    )),
-    p_renderer(std::unique_ptr<SDL_Renderer, decltype(&SDL_DestroyRenderer)>(SDL_CreateRenderer(p_window.get(), -1, SDL_RENDERER_ACCELERATED),
+GameData::GameData(int w, int h): 
+    p_window(std::unique_ptr<SDL_Window, decltype(&SDL_DestroyWindow)>(
+        SDL_CreateWindow(
+            "An SDL2 window",                  // window title
+            SDL_WINDOWPOS_UNDEFINED,           // initial x position
+            SDL_WINDOWPOS_UNDEFINED,           // initial y position
+            w,                               // width, in pixels
+            h,                               // height, in pixels
+            SDL_WINDOW_OPENGL     
+            ),
+        SDL_DestroyWindow
+        )),
+    p_renderer(std::unique_ptr<SDL_Renderer, decltype(&SDL_DestroyRenderer)>(
+        SDL_CreateRenderer(
+            p_window.get(), -1, SDL_RENDERER_ACCELERATED
+            ),
     SDL_DestroyRenderer)),
     running{false} {};
 
-const auto GameData::P_getWindow(){
+auto GameData::P_getWindow() const -> SDL_Window*{
     return p_window.get();
 }
 
-const auto GameData::P_getRenderer(){
+auto GameData::P_getRenderer() const -> SDL_Renderer*{
     return p_renderer.get();
 }
 
-bool GameData::GetRunning(){
+bool GameData::GetRunning() const{
     return running;
 }

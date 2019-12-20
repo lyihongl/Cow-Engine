@@ -15,9 +15,9 @@ class GameData{
 
     public:
 
-    GameData();
-    const auto P_getWindow();
-    const auto P_getRenderer();    
-    bool GetRunning();
+    GameData(int w=1080, int h=720);
+    auto P_getWindow() const -> SDL_Window*;
+    auto P_getRenderer() const -> SDL_Renderer*;    
+    bool GetRunning() const;
 };
 #endif
