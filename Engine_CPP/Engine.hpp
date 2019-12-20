@@ -8,7 +8,9 @@
 Style guide
 
 All objects will start with capital letter
-The project will primarly use snake case with 1 expection.=
+All public functions will start with a capital letter
+All private functions will start with a lower case letter
+The project will primarly use camel case with 1 expection.
 
 ALl private/protected member's will begin with lower case letter
 All public member's will begin with upper case letter, except for pointers
@@ -16,35 +18,14 @@ All pointers will be prefixed with p_ or P_ depending on public or private
 
 All parameters will start with lower case letter
 
+The only use of abstract classes will be for defining interfaces
+The project aims to advoid inheritence
+
 */
 
 void Tick(GameData& p_gd);
 void Render(GameData& p_gd);
 void StartGame();
 void GameLoop(GameData& p_gd);
-
-void StartGame(){
-    SDL_Init(SDL_INIT_EVERYTHING);
-    GameData p_gd{};
-    GameLoop(p_gd);
-}
-
-void GameLoop(GameData& p_gd){
-    SDL_Event e;
-    uint8_t running = 1;
-
-    for(;running;) {
-
-        SDL_RenderClear(p_gd.P_get_renderer());
-        SDL_PollEvent(&e);
-        Tick(p_gd);
-        Render(p_gd);
-
-        if(e.window.event == SDL_WINDOWEVENT_CLOSE){
-            running = 0;
-        }
-        SDL_RenderPresent(p_gd.P_get_renderer());
-    }
-}
 
 #endif
