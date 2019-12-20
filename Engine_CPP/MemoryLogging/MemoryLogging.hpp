@@ -1,6 +1,6 @@
 #ifndef COW_MEMORYLOGGING_HPP
 #define COW_MEMORYLOGGING_HPP
-#define MEM_DEBUG 1
+#define MEM_DEBUG 0
 
 
 #if MEM_DEBUG

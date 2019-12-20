@@ -18,40 +18,32 @@ All parameters will start with lower case letter
 
 */
 
-void Tick(GameData* p_gd);
-void Render(GameData* p_gd);
+void Tick(GameData& p_gd);
+void Render(GameData& p_gd);
 void StartGame();
-void GameLoop(GameData* p_gd);
-
-void Tick(GameData* p_gd){
-
-}
-void Render(GameData* p_gd){
-
-}
+void GameLoop(GameData& p_gd);
 
 void StartGame(){
-    GameData* p_gd = new GameData();
+    SDL_Init(SDL_INIT_EVERYTHING);
+    GameData p_gd{};
     GameLoop(p_gd);
 }
 
-void GameLoop(GameData* p_gd){
+void GameLoop(GameData& p_gd){
     SDL_Event e;
     uint8_t running = 1;
 
     for(;running;) {
 
-        SDL_RenderClear(p_gd -> P_get_renderer());
+        SDL_RenderClear(p_gd.P_get_renderer());
         SDL_PollEvent(&e);
         Tick(p_gd);
         Render(p_gd);
-        //printf("game loop\r\n");
-        //RenderShape(&(d->rects), d -> window, d -> r, &(d -> ro));
 
         if(e.window.event == SDL_WINDOWEVENT_CLOSE){
             running = 0;
         }
-        SDL_RenderPresent(p_gd -> P_get_renderer());
+        SDL_RenderPresent(p_gd.P_get_renderer());
     }
 }
 

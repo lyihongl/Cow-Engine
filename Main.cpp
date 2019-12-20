@@ -5,3 +5,11 @@ int main(int argc, char** argv){
     StartGame();
     return 0;
 }
+
+void Tick(GameData& p_gd){
+
+}
+
+void Render(GameData& p_gd){
+
+}
