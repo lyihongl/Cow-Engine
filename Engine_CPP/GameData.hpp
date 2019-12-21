@@ -15,9 +15,12 @@ class GameData{
 
     public:
 
+    enum Running{YES = 1, NO = 0};
     GameData(int w=1080, int h=720);
     auto P_getWindow() const -> SDL_Window*;
     auto P_getRenderer() const -> SDL_Renderer*;    
     bool GetRunning() const;
+    void SetRunning(bool running);
+    void SetRunning(Running running);
 };
 #endif

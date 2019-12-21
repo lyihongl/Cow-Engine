@@ -1,5 +1,5 @@
 OBJS = Main.cpp
-BINS = $(GameData) $(ENGINE)
+BINS = $(GAMEDATA) $(ENGINE)
 GAMEDATA = build\GameData.o
 ENGINE =  build\Engine.o
 COMPILER = g++ -std=c++14
@@ -21,4 +21,5 @@ $(GAMEDATA): Engine_CPP\GameData.cpp Engine_CPP\GameData.hpp
 	$(COMPILER) Engine_CPP\GameData.cpp -c -o $(GAMEDATA) $(LIB)
 
 clean:
-	rm build\*
+	del /q build\*
+	del /q *.exe

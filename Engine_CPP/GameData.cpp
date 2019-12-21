@@ -30,3 +30,7 @@ auto GameData::P_getRenderer() const -> SDL_Renderer*{
 bool GameData::GetRunning() const{
     return running;
 }
+
+void GameData::SetRunning(bool running){
+    this->running = running;
+}
