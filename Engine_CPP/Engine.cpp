@@ -2,12 +2,12 @@
 
 void StartGame(){
     SDL_Init(SDL_INIT_EVERYTHING);
-    GameData p_gd{};
-    p_gd.SetRunning(GameData::Running::YES);
-    GameLoop(p_gd);
+    cow::GameData p_gd{};
+    p_gd.SetRunning(cow::GameData::ERunning::YES);
+    cow::GameLoop(p_gd);
 }
 
-void GameLoop(GameData& p_gd){
+void cow::GameLoop(cow::GameData& p_gd){
     SDL_Event e;
     uint8_t running = 1;
 
@@ -16,11 +16,11 @@ void GameLoop(GameData& p_gd){
         SDL_RenderClear(p_gd.P_getRenderer());
         SDL_PollEvent(&e);
 
-        Tick(p_gd);
-        Render(p_gd);
+        cow::Tick(p_gd);
+        cow::Render(p_gd);
 
         if(e.window.event == SDL_WINDOWEVENT_CLOSE){
-            running = 0;
+            p_gd.SetRunning(GameData::ERunning::NO);
         }
         SDL_RenderPresent(p_gd.P_getRenderer());
     }

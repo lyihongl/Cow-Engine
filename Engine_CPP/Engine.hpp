@@ -16,6 +16,8 @@ ALl private/protected member's will begin with lower case letter
 All public member's will begin with upper case letter, except for pointers
 All pointers will be prefixed with p_ or P_ depending on public or private
 
+All acronyms will be capitalized, example: RGBA
+
 All parameters will start with lower case letter
 
 The only use of abstract classes will be for defining interfaces
@@ -23,9 +25,11 @@ The project aims to advoid inheritence
 
 */
 
-void Tick(GameData& p_gd);
-void Render(GameData& p_gd);
-void StartGame();
-void GameLoop(GameData& p_gd);
+namespace cow{
+    void Tick(GameData& p_gd);
+    void Render(GameData& p_gd);
+    void StartGame();
+    void GameLoop(GameData& p_gd);
+}
 
 #endif

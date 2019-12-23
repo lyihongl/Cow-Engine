@@ -2,6 +2,7 @@ OBJS = Main.cpp
 BINS = $(GAMEDATA) $(ENGINE)
 GAMEDATA = build\GameData.o
 ENGINE =  build\Engine.o
+RECTANGLE = build\Rectangle.o
 COMPILER = g++ -std=c++14
 LIB = -IC:\Dev\SDL2-2.0.10\x86_64-w64-mingw32\include -LC:\Dev\SDL2-2.0.10\x86_64-w64-mingw32\lib -w -lmingw32 -lSDL2main -lSDL2 -DLOG_USE_COLOR
 
@@ -19,6 +20,9 @@ $(ENGINE): Engine_CPP\Engine.cpp Engine_CPP\Engine.hpp
 
 $(GAMEDATA): Engine_CPP\GameData.cpp Engine_CPP\GameData.hpp
 	$(COMPILER) Engine_CPP\GameData.cpp -c -o $(GAMEDATA) $(LIB)
+
+$(RECTANGLE)
+	$(COMPILER) Engine_CPP\Graphics\Shape\Rectangle.cpp -c -o $(RECTANGLE) $(LIB)
 
 clean:
 	del /q build\*
