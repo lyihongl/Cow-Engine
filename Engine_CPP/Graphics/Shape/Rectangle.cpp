@@ -1,8 +1,9 @@
 #include "Rectangle.hpp"
+#include <iostream>
 
 using namespace cow;
 
-Rectangle::Rectangle(){
+cow::Rectangle::Rectangle(){
     singleUnitSize = 4;
 }
 
@@ -10,14 +11,16 @@ int Rectangle::GetSingleUnitSize() const {
     return singleUnitSize;
 }
 
-void Rectangle::AddElement(double _data...){
-    va_list args;
+void Rectangle::AddElement(double _data, ...){
+    std::va_list args;
     va_start(args, _data);
     for(std::size_t i {0}; i < singleUnitSize; i++){
-        data.push_back(va_arg(args, double));
+        auto t = va_arg(args, double);
+        data.push_back(t);
+        std::cout << "pushing back" << t <<std::endl;
     }
 }
 
-void  Rectangle::Render() const{
-
+void  Rectangle::Render(SDL_Renderer* r) const{
+    
 }

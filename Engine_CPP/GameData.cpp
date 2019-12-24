@@ -1,6 +1,6 @@
 #include "GameData.hpp"
 
-GameData::GameData(int w, int h): 
+cow::GameData::GameData(int w, int h): 
     p_window(std::unique_ptr<SDL_Window, decltype(&SDL_DestroyWindow)>(
         SDL_CreateWindow(
             "An SDL2 window",                  // window title
@@ -19,18 +19,30 @@ GameData::GameData(int w, int h):
     SDL_DestroyRenderer)),
     running{false} {};
 
-auto GameData::P_getWindow() const -> SDL_Window*{
+auto cow::GameData::P_getWindow() const -> SDL_Window*{
     return p_window.get();
 }
 
-auto GameData::P_getRenderer() const -> SDL_Renderer*{
+auto cow::GameData::P_getRenderer() const -> SDL_Renderer*{
     return p_renderer.get();
 }
 
-bool GameData::GetRunning() const{
+bool cow::GameData::GetRunning() const{
     return running;
 }
 
-void GameData::SetRunning(bool running){
+void cow::GameData::SetRunning(bool running){
     this->running = running;
+}
+void cow::GameData::SetRunning(ERunning running){
+    switch(running){
+        case ERunning::YES: 
+            this -> running = true;
+            break;
+        case ERunning::NO:
+            this -> running = false;
+            break;
+        default:
+            this -> running = false;
+    }
 }

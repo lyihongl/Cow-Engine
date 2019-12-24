@@ -1,13 +1,13 @@
 #include "Engine.hpp"
 
-void StartGame(){
+void cow::StartGame(){
     SDL_Init(SDL_INIT_EVERYTHING);
     cow::GameData p_gd{};
     p_gd.SetRunning(cow::GameData::ERunning::YES);
     cow::GameLoop(p_gd);
 }
 
-void cow::GameLoop(cow::GameData& p_gd){
+void cow::GameLoop(GameData& p_gd){
     SDL_Event e;
     uint8_t running = 1;
 
@@ -20,7 +20,7 @@ void cow::GameLoop(cow::GameData& p_gd){
         cow::Render(p_gd);
 
         if(e.window.event == SDL_WINDOWEVENT_CLOSE){
-            p_gd.SetRunning(GameData::ERunning::NO);
+            p_gd.SetRunning(cow::GameData::ERunning::NO);
         }
         SDL_RenderPresent(p_gd.P_getRenderer());
     }
