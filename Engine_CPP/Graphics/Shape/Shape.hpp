@@ -3,26 +3,25 @@
 #include <SDL2/SDL.h>
 #include <vector>
 #include "../RenderOptions.hpp"
-namespace cow{
-    class Shape{
+namespace cow {
+class Shape {
+   protected:
+    std::vector<double> data;
+    int dataSize;
+    int singleUnitSize;
+    RenderOptions ro;
 
-        protected:
+   public:
+    enum EShape { Rect,
+                  Circle };
 
-        std::vector<double>data;
-        int dataSize;
-        int singleUnitSize;
-        RenderOptions r;
-
-        public:
-
-        enum EShape{Rect, Circle};
-
-        const auto& GetData(){
-            return data;
-        }
-        virtual int GetSingleUnitSize() const = 0;
-        virtual void AddElement(double _data, ...) = 0;
-        virtual void Render(SDL_Renderer* render) const = 0;
-    };
-}
+    const auto& GetData() {
+        return data;
+    }
+    virtual int GetSingleUnitSize() const = 0;
+    virtual void AddElement(double _data[4]) = 0;
+    virtual void RemoveElement(int i) = 0;
+    virtual void Render(SDL_Renderer* render) const = 0;
+};
+}  // namespace cow
 #endif
