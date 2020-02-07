@@ -1,25 +1,24 @@
-#include "Engine.hpp"
+#include "../inc/Engine.hpp"
 
-void cow::StartGame(){
+void cow::StartGame() {
     SDL_Init(SDL_INIT_EVERYTHING);
     cow::GameData p_gd{};
     p_gd.SetRunning(cow::GameData::ERunning::YES);
     cow::GameLoop(p_gd);
 }
 
-void cow::GameLoop(GameData& p_gd){
+void cow::GameLoop(GameData& p_gd) {
     SDL_Event e;
     uint8_t running = 1;
 
-    for(;p_gd.GetRunning();) {
-
+    for (; p_gd.GetRunning();) {
         SDL_RenderClear(p_gd.P_getRenderer());
         SDL_PollEvent(&e);
 
         cow::Tick(p_gd);
         cow::Render(p_gd);
 
-        if(e.window.event == SDL_WINDOWEVENT_CLOSE){
+        if (e.window.event == SDL_WINDOWEVENT_CLOSE) {
             p_gd.SetRunning(cow::GameData::ERunning::NO);
         }
         SDL_RenderPresent(p_gd.P_getRenderer());
