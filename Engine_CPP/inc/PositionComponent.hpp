@@ -4,15 +4,16 @@ namespace cow {
 
 class PositionComponent {
    private:
-    int x, y, entityId;
+    int x, y, parentId, id;
 
    public:
-    PositionComponent(int entityId);
+    PositionComponent();
+    PositionComponent(int parentId);
     int GetX();
     int GetY();
     void SetX(int x);
     void SetY(int y);
-    void GetEntityId();
+    void GetParentId();
 };
 };  // namespace cow
 #endif

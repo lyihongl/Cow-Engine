@@ -5,19 +5,21 @@
 #include <string>
 namespace cow {
 class ShapeComponent {
-   private:
+   public:
     enum shape { rect,
                  circle };
-    shape s;
-    int w, h, entityId;
-
-   public:
     ShapeComponent(int entityId, shape s, int w, int h);
     void SetWidth(int w);
     void SetHeight(int h);
-    int GetWidth();
-    int GetHeight();
-    void GetEntityId();
+    int GetWidth() const;
+    int GetHeight() const;
+    int GetParentId() const;
+    int GetId() const;
+    shape GetShape() const;
+
+   private:
+    shape s;
+    int w, h, parentId, id;
 };
 }  // namespace cow
 #endif

@@ -14,7 +14,8 @@ cow::GameData::GameData(int w, int h) : p_window(
                                             SDL_CreateRenderer(
                                                 p_window.get(), -1, SDL_RENDERER_ACCELERATED),
                                             SDL_DestroyRenderer)),
-                                        running{false} {};
+                                        running{false},
+                                        p_renderEngine{std::make_unique<RenderEngine>(p_window.get(), p_renderer.get())} {};
 
 auto cow::GameData::P_getWindow() const -> SDL_Window* {
     return p_window.get();
@@ -22,6 +23,14 @@ auto cow::GameData::P_getWindow() const -> SDL_Window* {
 
 auto cow::GameData::P_getRenderer() const -> SDL_Renderer* {
     return p_renderer.get();
+}
+
+auto cow::GameData::P_getRenderEngine() const -> RenderEngine* {
+    return p_renderEngine.get();
+}
+
+auto cow::GameData::P_getEntityManager() const -> EntityManager* {
+    return P_entityManager.get();
 }
 
 bool cow::GameData::GetRunning() const {

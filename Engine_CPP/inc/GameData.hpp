@@ -2,27 +2,32 @@
 #define COW_GAMEDATA_HPP
 #include <SDL2/SDL.h>
 #include <memory>
+#include "../inc/EntityManager.hpp"
+#include "../inc/RenderEngine.hpp"
 
-namespace cow{
+namespace cow {
 /**
  * Holds basic data required for starting the application
  */
-    class GameData{
-        private:
+class GameData {
+   private:
+    std::unique_ptr<SDL_Window, decltype(&SDL_DestroyWindow)> p_window;
+    std::unique_ptr<SDL_Renderer, decltype(&SDL_DestroyRenderer)> p_renderer;
+    std::unique_ptr<RenderEngine> p_renderEngine;
+    std::unique_ptr<EntityManager> P_entityManager;
+    bool running;
 
-        std::unique_ptr<SDL_Window, decltype(&SDL_DestroyWindow)> p_window;
-        std::unique_ptr<SDL_Renderer, decltype(&SDL_DestroyRenderer)> p_renderer;
-        bool running;
-
-        public:
-
-        enum ERunning{YES = 1, NO = 0};
-        GameData(int w=1080, int h=720);
-        auto P_getWindow() const -> SDL_Window*;
-        auto P_getRenderer() const -> SDL_Renderer*;    
-        bool GetRunning() const;
-        void SetRunning(bool running);
-        void SetRunning(ERunning running);
-    };
-}
+   public:
+    enum ERunning { YES = 1,
+                    NO = 0 };
+    GameData(int w = 1080, int h = 720);
+    auto P_getWindow() const -> SDL_Window*;
+    auto P_getRenderer() const -> SDL_Renderer*;
+    auto P_getRenderEngine() const -> RenderEngine*;
+    auto P_getEntityManager() const -> EntityManager*;
+    bool GetRunning() const;
+    void SetRunning(bool running);
+    void SetRunning(ERunning running);
+};
+}  // namespace cow
 #endif
