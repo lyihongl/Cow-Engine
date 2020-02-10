@@ -4,11 +4,11 @@
 #include <memory>
 #include <string>
 namespace cow {
+enum shape { rect,
+             circle };
 class ShapeComponent {
    public:
-    enum shape { rect,
-                 circle };
-    ShapeComponent(int entityId, shape s, int w, int h);
+    ShapeComponent(int parentId, shape s, int w, int h);
     void SetWidth(int w);
     void SetHeight(int h);
     int GetWidth() const;
