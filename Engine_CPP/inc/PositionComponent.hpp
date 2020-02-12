@@ -9,11 +9,12 @@ class PositionComponent {
    public:
     PositionComponent();
     PositionComponent(int parentId);
+    PositionComponent(int parentId, int x, int y);
     int GetX() const;
     int GetY() const;
     void SetX(int x);
     void SetY(int y);
-    void GetParentId();
+    int GetParentId() const;
 };
 };  // namespace cow
 #endif

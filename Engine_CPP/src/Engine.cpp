@@ -5,7 +5,11 @@ void cow::StartGame() {
     SDL_Init(SDL_INIT_EVERYTHING);
     cow::GameData p_gd{};
     p_gd.SetRunning(cow::GameData::ERunning::YES);
-    cow::ShapeComponent s{0, cow::rect, 4, 4};
+    cow::ShapeComponent s{0, cow::rect, 20, 20};
+    cow::PositionComponent p{0, 100, 100};
+    //p_gd.P_getEntityManager
+    p_gd.P_getEntityManager()->AddShape(s);
+    p_gd.P_getEntityManager()->AddPosition(p);
 
     cow::GameLoop(p_gd);
 }
@@ -20,9 +24,9 @@ void cow::GameLoop(GameData& p_gd) {
 
         cow::Tick(p_gd);
         //cow::Render(p_gd);
-        std::cout << __LINE__ << std::endl;
+        //std::cout << __LINE__ << std::endl;
         p_gd.P_getRenderEngine()->RenderShape(p_gd.P_getEntityManager()->Positions, p_gd.P_getEntityManager()->Shapes);
-        std::cout << __LINE__ << std::endl;
+        //std::cout << __LINE__ << std::endl;
 
         if (e.window.event == SDL_WINDOWEVENT_CLOSE) {
             p_gd.SetRunning(cow::GameData::ERunning::NO);

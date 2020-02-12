@@ -18,3 +18,7 @@ int cow::ShapeComponent::GetHeight() const {
 cow::shape cow::ShapeComponent::GetShape() const {
     return s;
 }
+
+int cow::ShapeComponent::GetParentId() const{
+    return parentId;
+}

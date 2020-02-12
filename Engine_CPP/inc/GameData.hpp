@@ -4,6 +4,7 @@
 #include <memory>
 #include "../inc/EntityManager.hpp"
 #include "../inc/RenderEngine.hpp"
+#include "../inc/GameObject.hpp"
 
 namespace cow {
 /**
@@ -21,10 +22,10 @@ class GameData {
     enum ERunning { YES = 1,
                     NO = 0 };
     GameData(int w = 1080, int h = 720);
-    auto P_getWindow() const -> SDL_Window*;
-    auto P_getRenderer() const -> SDL_Renderer*;
-    auto P_getRenderEngine() const -> RenderEngine*;
-    auto P_getEntityManager() const -> EntityManager*;
+    auto P_getWindow() -> SDL_Window*;
+    auto P_getRenderer() -> SDL_Renderer*;
+    auto P_getRenderEngine() -> RenderEngine*;
+    auto P_getEntityManager() -> EntityManager*;
     bool GetRunning() const;
     void SetRunning(bool running);
     void SetRunning(ERunning running);

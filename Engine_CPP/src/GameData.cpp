@@ -22,22 +22,22 @@ cow::GameData::GameData(int w, int h) :
         P_entityManager = std::move(temp2);
     };
 
-auto cow::GameData::P_getWindow() const -> SDL_Window* {
+auto cow::GameData::P_getWindow() -> SDL_Window* {
     return p_window.get();
 }
 
-auto cow::GameData::P_getRenderer() const -> SDL_Renderer* {
+auto cow::GameData::P_getRenderer() -> SDL_Renderer* {
     return p_renderer.get();
 }
 
-auto cow::GameData::P_getRenderEngine() const -> RenderEngine* {
-    std::cout << __FILE__ << __LINE__ << std::endl;
-    std::cout << p_renderEngine.get() << std::endl;
+auto cow::GameData::P_getRenderEngine() -> RenderEngine* {
+    //std::cout << __FILE__ << __LINE__ << std::endl;
+    //std::cout << p_renderEngine.get() << std::endl;
     return p_renderEngine.get();
 }
 
-auto cow::GameData::P_getEntityManager() const -> EntityManager* {
-    std::cout << __FILE__ << __LINE__ << std::endl;
+auto cow::GameData::P_getEntityManager() -> EntityManager* {
+    //std::cout << __FILE__ << __LINE__ << std::endl;
     return P_entityManager.get();
 }
 
