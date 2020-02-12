@@ -3,7 +3,7 @@
 To build:
 
 
-Please ensure that SDL2 is installed, along with the Image package. Modify the make file so that it points to your install of SDL2
+Please ensure that SDL2 is installed, along with the Image package. Modify the make file so that it points to your install of SDL2. Note as well that currently the Makefile is using mingw.
 
 
 This engine is being designed with only Windows in mind, as it is just a side thing for me, currently nothing should stop you from building on \*nix systems but that may change in the future.
