@@ -28,7 +28,9 @@ The project aims to advoid inheritence
 namespace cow{
     void Tick(GameData& p_gd);
     void Render(GameData& p_gd);
+    //Will initialize a Gamedata object, will call Init
     void StartGame();
+    //Init
     void Init(GameData& p_gd);
     void GameLoop(GameData& p_gd);
 }

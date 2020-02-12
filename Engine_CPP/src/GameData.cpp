@@ -2,6 +2,7 @@
 #include <iostream>
 
 cow::GameData::GameData(int w, int h) : 
+//Initializations
     p_window(std::unique_ptr<SDL_Window, decltype(&SDL_DestroyWindow)>(
         SDL_CreateWindow(
             "Test Window",
@@ -14,13 +15,14 @@ cow::GameData::GameData(int w, int h) :
     p_renderer(std::unique_ptr<SDL_Renderer, decltype(&SDL_DestroyRenderer)>(
         SDL_CreateRenderer(
             p_window.get(), -1, SDL_RENDERER_ACCELERATED),
-        SDL_DestroyRenderer)){
+        SDL_DestroyRenderer))
+    {
+        //Constructor begin
         std::unique_ptr<RenderEngine> temp = std::make_unique<RenderEngine>(p_window.get(), p_renderer.get());
         p_renderEngine = std::move(temp);
-        //std::unique_ptr<EntityManager> temp2 = 
         auto temp2 = std::make_unique<EntityManager>();
         P_entityManager = std::move(temp2);
-    };
+    }
 
 auto cow::GameData::P_getWindow() -> SDL_Window* {
     return p_window.get();
