@@ -16,3 +16,11 @@ void cow::Tick(GameData& p_gd) {
 
 void cow::Render(GameData& p_gd) {
 }
+
+void cow::Init(GameData& p_gd){
+    cow::ShapeComponent s{0, cow::rect, 20, 20};
+    cow::PositionComponent p{0, 100, 100};
+    //p_gd.P_getEntityManager
+    p_gd.P_getEntityManager()->AddShape(s);
+    p_gd.P_getEntityManager()->AddPosition(p);
+}

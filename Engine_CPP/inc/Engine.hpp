@@ -29,6 +29,7 @@ namespace cow{
     void Tick(GameData& p_gd);
     void Render(GameData& p_gd);
     void StartGame();
+    void Init(GameData& p_gd);
     void GameLoop(GameData& p_gd);
 }
 

@@ -5,12 +5,7 @@ void cow::StartGame() {
     SDL_Init(SDL_INIT_EVERYTHING);
     cow::GameData p_gd{};
     p_gd.SetRunning(cow::GameData::ERunning::YES);
-    cow::ShapeComponent s{0, cow::rect, 20, 20};
-    cow::PositionComponent p{0, 100, 100};
-    //p_gd.P_getEntityManager
-    p_gd.P_getEntityManager()->AddShape(s);
-    p_gd.P_getEntityManager()->AddPosition(p);
-
+    cow::Init(p_gd);
     cow::GameLoop(p_gd);
 }
 
