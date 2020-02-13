@@ -2,6 +2,7 @@
 #include <iostream>
 #include "../inc/Engine.hpp"
 #include "../inc/GameData.hpp"
+#include "../inc/Input.hpp"
 
 int main(int argc, char** argv) {
     cow::StartGame();
@@ -9,6 +10,7 @@ int main(int argc, char** argv) {
 }
 
 void cow::Tick(GameData& p_gd) {
+    KeyDownEvent(p_gd);
 }
 
 void cow::Render(GameData& p_gd) {
