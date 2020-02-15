@@ -14,6 +14,8 @@ class PositionComponent {
     int GetY() const;
     void SetX(int x);
     void SetY(int y);
+    void RelativeX(int x);
+    void RelativeY(int y);
     int GetParentId() const;
 };
 };  // namespace cow
