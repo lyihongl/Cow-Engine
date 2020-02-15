@@ -17,11 +17,13 @@ class GameData {
     std::unique_ptr<RenderEngine> p_renderEngine;
     std::unique_ptr<EntityManager> P_entityManager;
     bool running;
+    int w, h;
 
    public:
     enum ERunning { YES = 1,
                     NO = 0 };
     GameData(int w = 1080, int h = 720);
+    GameData(GameData& p_gd);
     auto P_getWindow() -> SDL_Window*;
     auto P_getRenderer() -> SDL_Renderer*;
     auto P_getRenderEngine() -> RenderEngine*;
@@ -29,6 +31,8 @@ class GameData {
     bool GetRunning() const;
     void SetRunning(bool running);
     void SetRunning(ERunning running);
+    int GetW() const;
+    int GetH() const;
 };
 }  // namespace cow
 #endif

@@ -24,13 +24,13 @@ void cow::GameLoop(GameData& p_gd) {
 
     for (; p_gd.GetRunning();) {
         currentTime = chrono::duration_cast<millis>(chrono::system_clock::now().time_since_epoch());
-        cow::Tick(p_gd);
         if(currentTime.count()-startTime.count() > 17){
             startTime = chrono::duration_cast<millis>(chrono::system_clock::now().time_since_epoch());
 
             SDL_RenderClear(p_gd.P_getRenderer());
             SDL_PollEvent(&e);
 
+            cow::Tick(p_gd);
             cow::Render(p_gd);
             //std::cout << __LINE__ << std::endl;
             p_gd.P_getRenderEngine()->RenderShape(p_gd.P_getEntityManager()->Positions, p_gd.P_getEntityManager()->Shapes);

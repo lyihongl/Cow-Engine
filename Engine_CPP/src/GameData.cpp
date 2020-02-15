@@ -22,8 +22,9 @@ cow::GameData::GameData(int w, int h) :
         p_renderEngine = std::move(temp);
         auto temp2 = std::make_unique<EntityManager>();
         P_entityManager = std::move(temp2);
+        this->w = w;
+        this->h = h;
     }
-
 auto cow::GameData::P_getWindow() -> SDL_Window* {
     return p_window.get();
 }
@@ -61,4 +62,12 @@ void cow::GameData::SetRunning(ERunning running) {
         default:
             this->running = false;
     }
+}
+
+int cow::GameData::GetH() const{
+    return h;
+}
+
+int cow::GameData::GetW() const{
+    return w;
 }
