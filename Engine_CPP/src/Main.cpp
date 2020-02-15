@@ -11,6 +11,8 @@
  
 #include <stdlib.h>
 #include <stdio.h>
+#include "../inc/LoadShaders.hpp"
+#include <glm/gtc/matrix_transform.hpp>
 
 int main(int argc, char** argv){
     if(!glfwInit()){
@@ -46,15 +48,36 @@ int main(int argc, char** argv){
     glGenBuffers(1, &vertexbuffer);
     glBindBuffer(GL_ARRAY_BUFFER, vertexbuffer);
     glBufferData(GL_ARRAY_BUFFER, sizeof(g_vertex_buffer_data), g_vertex_buffer_data, GL_STATIC_DRAW);
+    //system("dir");
+    GLuint programID = LoadShaders(".\\Engine_CPP\\shaders\\learn.glsl", ".\\Engine_CPP\\shaders\\learn2.glsl");
+    int width = 4;
+    int height = 3;
+    glm::mat4 Projection = glm::perspective(glm::radians(45.0f), (float) width/ (float) height, 0.1f, 100.0f);
+    glm::mat4 View = glm::lookAt(
+        glm::vec3(4, 3, 3),
+        glm::vec3(0, 0, 0),
+        glm::vec3(0, 1, 0)
+    );
+
+    glm::mat4 Model = glm::mat4(1.0f);
+
+    glm::mat4 mvp = Projection*View*Model;
+
+
+    GLuint MatrixID = glGetUniformLocation(programID, "MVP");
 
     do{
-        glClear(GL_COLOR_BUFFER_BIT);
+        glClearColor(0.0f, 0.0f, 0.4f, 1.0f);
+        glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+        glUseProgram(programID);
 
         glEnableVertexAttribArray(0);
         glBindBuffer(GL_ARRAY_BUFFER, vertexbuffer);
         glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 0, (void*)0);
         glDrawArrays(GL_TRIANGLES, 0, 3);
         glDisableVertexAttribArray(0);
+
+        glUniformMatrix4fv(MatrixID, 1, GL_FALSE, &mvp[0][0]);
 
         glfwSwapBuffers(window);
         glfwPollEvents();
