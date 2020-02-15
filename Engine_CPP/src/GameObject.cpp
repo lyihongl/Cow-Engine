@@ -17,5 +17,8 @@ int cow::GameObject::GetId() const {
 }
 
 void cow::GameObject::EnableComponent(cow::Components c){
-    this->components | (1<<c);
+    this->components |= (1<<c);
+}
+bool cow::CheckComponents(int components, cow::Components c){
+    return components & (1<<c) != 0;
 }

@@ -1,9 +1,11 @@
+#ifndef COW_INPUT
+#define COW_INPUT
 #include <SDL2/SDL.h>
 #include <iostream>
 #include "GameData.hpp"
 
 namespace cow{
-
+namespace HeaderLibs{
 void KeyDownEvent(GameData& p_gd, bool keyArray[4]) {
     SDL_Event event;
     const Uint8 *keystate = SDL_GetKeyboardState(NULL);
@@ -34,6 +36,8 @@ void KeyDownEvent(GameData& p_gd, bool keyArray[4]) {
         }
         
     }
+};
 }
 
 };
+#endif

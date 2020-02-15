@@ -4,9 +4,7 @@
 namespace cow {
 
     enum Components{Position, Shape};
-    bool CheckComponents(int components, Components c){
-        return components & (1<<c) != 0;
-    }
+    bool CheckComponents(int components, Components c);
 
 class GameObject {
    private:

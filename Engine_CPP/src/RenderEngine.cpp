@@ -8,7 +8,7 @@ cow::RenderEngine::RenderEngine(SDL_Window* w, SDL_Renderer* r) {
     this->r = r;
 }
 
-void cow::RenderEngine::RenderShape(std::vector<PositionComponent> p, std::vector<cow::ShapeComponent> s) {
+void cow::RenderEngine::RenderAllShapes(std::vector<PositionComponent> p, std::vector<cow::ShapeComponent> s) {
     //std::cout << __FILE__ << __LINE__ << std::endl;
     //render shape to w and r here
     for (auto const& it : s) {

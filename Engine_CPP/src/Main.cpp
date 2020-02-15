@@ -35,7 +35,7 @@ void cow::Tick(GameData& p_gd) {
 }
 
 void cow::Render(GameData& p_gd) {
-    p_gd.P_getRenderEngine()->RenderShape(p_gd.P_getEntityManager()->Positions, p_gd.P_getEntityManager()->Shapes);
+    p_gd.P_getRenderEngine()->RenderAllShapes(p_gd.P_getEntityManager()->Positions, p_gd.P_getEntityManager()->Shapes);
 }
 
 void cow::Init(GameData& p_gd){
