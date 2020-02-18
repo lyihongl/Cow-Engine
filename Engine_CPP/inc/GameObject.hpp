@@ -3,8 +3,7 @@
 #include "ShapeComponent.hpp"
 namespace cow {
 
-    enum Components{Position, Shape};
-    bool CheckComponents(int components, Components c);
+    bool CheckComponents(int components, ECompType c);
 
 class GameObject {
    private:
@@ -19,7 +18,7 @@ class GameObject {
     GameObject(int id);
     GameObject(GameObject &g);
     int GetId() const;
-    void EnableComponent(Components c);
+    void EnableComponent(ECompType c);
     void AddComponent();
 };
 };  // namespace cow

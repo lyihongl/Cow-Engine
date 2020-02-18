@@ -1,6 +1,6 @@
 #include "../inc/ShapeComponent.hpp"
 
-cow::ShapeComponent::ShapeComponent(int id, shape s, int w, int h) : Component(id, -1){
+cow::ShapeComponent::ShapeComponent(int id, shape s, int w, int h) : Component(id, -1, ECompType::Shape){
     this->w = w;
     this->h = h;
     this->s = s;

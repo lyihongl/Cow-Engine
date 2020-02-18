@@ -1,9 +1,9 @@
 #include "../inc/PositionComponent.hpp"
 
-cow::PositionComponent::PositionComponent(int id) : Component(id, -1){
+cow::PositionComponent::PositionComponent(int id) : Component(id, -1, ECompType::Position){
 
 }
-cow::PositionComponent::PositionComponent(int id, int x, int y) : Component(id, -1){
+cow::PositionComponent::PositionComponent(int id, int x, int y) : Component(id, -1, ECompType::Position){
     this->parentId = parentId;
     this->x = x;
     this->y = y;
