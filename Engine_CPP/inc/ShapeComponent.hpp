@@ -3,12 +3,14 @@
 #include <SDL2/SDL_image.h>
 #include <memory>
 #include <string>
+#include "Component.hpp"
 namespace cow {
 enum shape { rect,
              circle };
-class ShapeComponent {
+class ShapeComponent : public Component{
    public:
-    ShapeComponent(int parentId, shape s, int w, int h);
+    ShapeComponent(int id);
+    ShapeComponent(int id, shape s, int w, int h);
     void SetWidth(int w);
     void SetHeight(int h);
     int GetWidth() const;

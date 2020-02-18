@@ -20,6 +20,7 @@ class GameObject {
     GameObject(GameObject &g);
     int GetId() const;
     void EnableComponent(Components c);
+    void AddComponent();
 };
 };  // namespace cow
 #endif

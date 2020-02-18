@@ -1,10 +1,9 @@
 #include "../inc/PositionComponent.hpp"
 
-cow::PositionComponent::PositionComponent() {}
-cow::PositionComponent::PositionComponent(int parentId) {
-    this->parentId = parentId;
+cow::PositionComponent::PositionComponent(int id) : Component(id, -1){
+
 }
-cow::PositionComponent::PositionComponent(int parentId, int x, int y) {
+cow::PositionComponent::PositionComponent(int id, int x, int y) : Component(id, -1){
     this->parentId = parentId;
     this->x = x;
     this->y = y;
@@ -24,8 +23,4 @@ void cow::PositionComponent::RelativeX(int x){
 
 void cow::PositionComponent::RelativeY(int y){
     this->y+=y;
-}
-
-int cow::PositionComponent::GetParentId() const {
-    return parentId;
 }

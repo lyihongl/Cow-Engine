@@ -33,7 +33,7 @@ void cow::GameLoop(GameData& p_gd) {
             cow::Tick(p_gd);
             cow::Render(p_gd);
             //std::cout << __LINE__ << std::endl;
-            p_gd.P_getRenderEngine()->RenderShape(p_gd.P_getEntityManager()->Positions, p_gd.P_getEntityManager()->Shapes);
+            p_gd.P_getRenderEngine()->RenderAllShapes(p_gd.P_getEntityManager()->Positions, p_gd.P_getEntityManager()->Shapes);
             //std::cout << __LINE__ << std::endl;
 
             if (e.window.event == SDL_WINDOWEVENT_CLOSE) {

@@ -1,10 +1,9 @@
 #include "../inc/ShapeComponent.hpp"
 
-cow::ShapeComponent::ShapeComponent(int parentId, shape s, int w, int h) {
+cow::ShapeComponent::ShapeComponent(int id, shape s, int w, int h) : Component(id, -1){
     this->w = w;
     this->h = h;
     this->s = s;
-    this->parentId = parentId;
 }
 
 int cow::ShapeComponent::GetWidth() const {
