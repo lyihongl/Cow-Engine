@@ -12,7 +12,7 @@ class RenderEngine {
 
    public:
     RenderEngine(SDL_Window* w, SDL_Renderer* r);
-    void RenderShape(std::vector<PositionComponent> p, std::vector<cow::ShapeComponent> s);
+    void RenderAllShapes(std::vector<PositionComponent> p, std::vector<cow::ShapeComponent> s);
     void RenderGraphics();
 };
 };  // namespace cow
