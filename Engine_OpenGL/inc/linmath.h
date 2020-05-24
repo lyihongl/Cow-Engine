@@ -1,5 +1,6 @@
 #pragma once
 #include <math.h>
+#include <cstring>
 
 #ifdef LINMATH_NO_INLINE
 #define LINMATH_H_FUNC static

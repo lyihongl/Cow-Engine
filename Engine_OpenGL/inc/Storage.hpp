@@ -1,10 +1,10 @@
 #pragma once
 
 #include <atomic>
+#include <cstdarg>
+#include <memory>
 #include <unordered_map>
 #include <vector>
-#include <memory>
-#include <cstdarg>
 
 namespace Cow {
 
@@ -41,7 +41,7 @@ class TypeMap {
 
     // Finds the value associated with the type "Key" in the type map.
     template <class Key>
-    iterator find() { return m_map.find(getTypeId<Key>())   ; }
+    iterator find() { return m_map.find(getTypeId<Key>()); }
 
     // Same as above, const version
     template <class Key>
@@ -49,11 +49,11 @@ class TypeMap {
 
     // Associates a value with the type "Key"
     template <class Key>
-    void put(ValueType &&value) {
+    void put(ValueType&& value) {
         m_map[getTypeId<Key>()] = std::forward<ValueType>(value);
     }
     template <class Key>
-    void put(ValueType &value) {
+    void put(ValueType& value) {
         m_map[getTypeId<Key>()] = std::forward<ValueType>(value);
     }
 
@@ -68,7 +68,6 @@ class TypeMap {
     InternalMap m_map;
 };
 
-
 //struct ComponentList;  // Stores component data
 
 //struct Archetype;  // provides info about which components it stores, and access to the componentlist
@@ -77,39 +76,48 @@ class TypeMap {
 
 //class TypeRegistry;
 
-struct Component{
+struct Component {
     uint32_t UniqueID;
     uint32_t CompID;
     uint32_t Version;
 };
 
-
 template <class ValueType>
 std::atomic_int Cow::TypeMap<ValueType>::LastTypeId{0};
 
-
-struct ComponentManager{
+struct ComponentManager {
     std::vector<std::unique_ptr<ComponentContainer>> Components;
 
     TypeMap<uint32_t> TMap{};
 
     template <typename T>
+
     uint32_t Register();
     unsigned int uniqueKey{1};
+
+    template <typename T>
+    void MapComponent(uint32_t EntityID, T& c);
 };
 
-
-struct ComponentContainer{
+struct ComponentContainer {
     std::vector<Component> data;
 };
 
-
 template <typename T>
-uint32_t ComponentManager::Register(){
-    if(TMap.find<T>() == TMap.end()){
+uint32_t ComponentManager::Register() {
+    if (TMap.find<T>() == TMap.end()) {
         TMap.put<T>(uniqueKey);
         Components.push_back(std::make_unique<ComponentContainer>());
         uniqueKey++;
+    }
+}
+
+template <typename T>
+void ComponentManager::MapComponent(uint32_t EntityID, T& c) {
+    auto result = TMap.find<T>();
+    if (result != TMap.end()) {
+        std::size_t index = result->second;
+        Components[index - 1]->data.push_back(c);
     }
 }
 
@@ -191,6 +199,5 @@ uint32_t ComponentManager::Register(){
 //};
 
 //type registry
-
 
 }  // namespace Cow

@@ -1,4 +1,4 @@
-#include <SDL2\SDL.h>
+#include <SDL2/SDL.h>
 #include <glad/glad.h>
 
 #include <atomic>
@@ -11,21 +11,18 @@
 #include "../inc/LoadShaders.hpp"
 #include "../inc/Storage.hpp"
 #include "../inc/linmath.h"
+#include "../inc/DefaultComponents.hpp"
+#include "../inc/RenderPipeline.hpp"
 
 
 
-class Position: public Cow::Component{
-    public:
-    Position(){}
-};
 
 int main(int argc, char* args[]) {
-    Cow::TypeMap<uint32_t> T;
-    //T.put<int>(true);
-    //T.put<double>(true);
-    Cow::ComponentManager c;
-    c.Register<Position>();
-    std::cout<<"test: "<<(c.TMap.find<Position>()->second)<<std::endl;
-    //Cow::ArchetypeFactory(4, 1, 2, 3, 4);
+    std::cout<<"hello world"<<std::endl;
+    //Cow::TypeMap<uint32_t> T;
+    //Cow::ComponentManager c;
+    //Cow::InitDefault2D(c);
+    //std::cout<<"test: "<<(c.TMap.find<Cow::Physics2D>()->second)<<std::endl;
+    //auto window = std::move(CowGraphics::InitGLFW());
     return 0;
 }
