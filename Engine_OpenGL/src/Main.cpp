@@ -19,10 +19,16 @@
 
 int main(int argc, char* args[]) {
     std::cout<<"hello world"<<std::endl;
-    //Cow::TypeMap<uint32_t> T;
-    //Cow::ComponentManager c;
-    //Cow::InitDefault2D(c);
-    //std::cout<<"test: "<<(c.TMap.find<Cow::Physics2D>()->second)<<std::endl;
+    Cow::TypeMap<uint32_t> T;
+    Cow::ComponentManager c;
+    Cow::InitDefault2D(c);
+    std::cout<<"test: "<<(c.TMap.find<Cow::Physics2D>()->second)<<std::endl;
     //auto window = std::move(CowGraphics::InitGLFW());
+    auto window = CowGraphics::InitGLFW();
+
+    CowGraphics::StartRender(window.get());
+
+    std::cout<<"crash"<<std::endl;
+    glfwTerminate();
     return 0;
 }

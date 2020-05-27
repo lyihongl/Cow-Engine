@@ -1,4 +1,4 @@
-CC=g++ -ggdb
+CC=g++ -g
 CFLAGS=-std=c++17
 LIB = C:\Dev\glad\src\glad.c -IC:\Dev\glm -IC:\Dev\glad\include -IC:\mingw64\x86_64-w64-mingw32\include -LC:\mingw64\x86_64-w64-mingw32\lib -IC:\Dev\SDL2-2.0.10\x86_64-w64-mingw32\include -LC:\Dev\SDL2-2.0.10\x86_64-w64-mingw32\lib -w -lmingw32 -lSDL2main -lSDL2 -DLOG_USE_COLOR -lglfw3 -lgdi32 -lopengl32
 SRCS=$(wildcard Engine_OpenGL/src/*.cpp)
