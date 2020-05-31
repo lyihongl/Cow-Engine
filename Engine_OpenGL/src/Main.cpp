@@ -8,7 +8,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 
-#include "../inc/LoadShaders.hpp"
+#include "../inc/Shaders.hpp"
 #include "../inc/Storage.hpp"
 #include "../inc/linmath.h"
 #include "../inc/DefaultComponents.hpp"
