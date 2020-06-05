@@ -6,7 +6,13 @@
 #include <sstream>
 #include <string>
 #define GLFW_INCLUDE_NONE
+#include <stdio.h>
+#include <stdlib.h>
 #include <GLFW/glfw3.h>
+//#include <glm/glm.hpp>
+//#include <glm/gtc/matrix_transform.hpp>
+//#include <glm/gtc/type_ptr.hpp>
+//#include <glm/gtx/string_cast.hpp>
 
 #include <iostream>
 #include <vector>
@@ -23,6 +29,8 @@ class Shader {
 
     template <typename T>
     void Set(const std::string& name, T val) const;
+    template <typename T>
+    void SetM(const std::string& name, T val) const;
 };
 
 Shader::Shader(const char* vertexPath, const char* fragmentPath) {
@@ -115,21 +123,22 @@ Shader::Shader(const char* vertexPath, const char* fragmentPath) {
     ID = ProgramID;
 }
 
-void Shader::Use(){
+void Shader::Use() {
     glUseProgram(ID);
 }
 
 template <typename T>
-void Shader::Set(const std::string &name, T val) const{
-    if(std::is_same<T, bool>::value){
-        glUniform1i(glGetUniformLocation(ID, name.c_str()), (int)val);
-    } else if ( std::is_same<T, int>::value){
-        std::cout<<"int"<<std::endl;
-        glUniform1i(glGetUniformLocation(ID, name.c_str()), (int)val);
-    } else if( std::is_same<T, float>::value){
-        glUniform1f(glGetUniformLocation(ID, name.c_str()), (float)val);
+void Shader::Set(const std::string& name, T val) const {
+    if (std::is_same<T, bool>::value) {
+        glUniform1i(glGetUniformLocation(ID, name.c_str()), val);
+    } else if (std::is_same<T, int>::value) {
+        std::cout << "int" << std::endl;
+        glUniform1i(glGetUniformLocation(ID, name.c_str()), val);
+    } else if (std::is_same<T, float>::value) {
+        glUniform1f(glGetUniformLocation(ID, name.c_str()), val);
     }
 }
+
 
 };  // namespace CowGraphics
 

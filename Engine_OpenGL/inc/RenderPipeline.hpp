@@ -7,15 +7,21 @@
 
 #include <iostream>
 #define GLFW_INCLUDE_NONE
+#include "../inc/Shaders.hpp"
+#include "../inc/linmath.h"
+#include "../inc/stb_image.h"
+
+
 #include <GLFW/glfw3.h>
 #include <stdio.h>
 #include <stdlib.h>
 
+#include <glm/glm.hpp>
+#include <glm/gtc/matrix_transform.hpp>
+#include <glm/gtc/type_ptr.hpp>
+#include <glm/gtx/string_cast.hpp>
 #include <memory>
 
-#include "../inc/Shaders.hpp"
-#include "../inc/linmath.h"
-#include "../inc/stb_image.h"
 
 namespace CowGraphics {
 
@@ -79,12 +85,19 @@ void StartRender(GLFWwindow* window) {
     //    -0.5f, 0.5f, 0.0f, 0.0f, 1.0f, 0.0f,  // bottom left
     //    0.5f, 0.5f, 0.0f, 0.0f, 0.0f, 1.0f    // top
     //};
+    //float vertices[] = {
+    //    // positions          // colors           // texture coords
+    //    0.5f, 0.5f, 0.0f, 1.0f, 0.0f, 0.0f, 1.0f, 1.0f,    // top right
+    //    0.5f, -0.5f, 0.0f, 0.0f, 1.0f, 0.0f, 1.0f, 0.0f,   // bottom right
+    //    -0.5f, -0.5f, 0.0f, 0.0f, 0.0f, 1.0f, 0.0f, 0.0f,  // bottom left
+    //    -0.5f, 0.5f, 0.0f, 1.0f, 1.0f, 0.0f, 0.0f, 1.0f    // top left
+    //};
     float vertices[] = {
-        // positions          // colors           // texture coords
-        0.5f, 0.5f, 0.0f, 1.0f, 0.0f, 0.0f, 1.0f, 1.0f,    // top right
-        0.5f, -0.5f, 0.0f, 0.0f, 1.0f, 0.0f, 1.0f, 0.0f,   // bottom right
-        -0.5f, -0.5f, 0.0f, 0.0f, 0.0f, 1.0f, 0.0f, 0.0f,  // bottom left
-        -0.5f, 0.5f, 0.0f, 1.0f, 1.0f, 0.0f, 0.0f, 1.0f    // top left
+        // positions          // texture coords
+        0.5f, 0.5f, 0.0f, 1.0f, 1.0f,    // top right
+        0.5f, -0.5f, 0.0f, 1.0f, 0.0f,   // bottom right
+        -0.5f, -0.5f, 0.0f, 0.0f, 0.0f,  // bottom left
+        -0.5f, 0.5f, 0.0f, 0.0f, 1.0f    // top left
     };
     unsigned int indices[] = {
         1, 2, 3,
@@ -110,13 +123,13 @@ void StartRender(GLFWwindow* window) {
     glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, EBO);
     glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(indices), indices, GL_STATIC_DRAW);
 
-    glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 8 * sizeof(float), (void*)0);
+    glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 5 * sizeof(float), (void*)0);
     glEnableVertexAttribArray(0);
-    glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, 8 * sizeof(float), (void*)(3 * sizeof(float)));
-    glEnableVertexAttribArray(1);
+    //glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, 8 * sizeof(float), (void*)(3 * sizeof(float)));
+    //glEnableVertexAttribArray(1);
 
-    glVertexAttribPointer(2, 2, GL_FLOAT, GL_FALSE, 8 * sizeof(float), (void*)(6 * sizeof(float)));
-    glEnableVertexAttribArray(2);
+    glVertexAttribPointer(1, 2, GL_FLOAT, GL_FALSE, 5 * sizeof(float), (void*)(3 * sizeof(float)));
+    glEnableVertexAttribArray(1);
 
     //load and create textures
     //-------------------------------------------
@@ -126,8 +139,8 @@ void StartRender(GLFWwindow* window) {
 
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
-    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
-    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
 
     int width, height, nrChannels;
     stbi_set_flip_vertically_on_load(true);
@@ -148,22 +161,60 @@ void StartRender(GLFWwindow* window) {
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
 
-    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
-    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
+    std::cout << "test" << std::endl;
 
-    data = stbi_load("./awesomeface.png", &width, &height, &nrChannels, 0);
+    stbi_set_flip_vertically_on_load(true);
+    data = stbi_load("./Engine_OpenGL/assets/testsheet.png", &width, &height, &nrChannels, 0);
+    std::cout << "test" << std::endl;
     if (data) {
         // note that the awesomeface.png has transparency and thus an alpha channel, so make sure to tell OpenGL the data type is of GL_RGBA
-        glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, width, height, 0, GL_RGBA, GL_UNSIGNED_BYTE, data);
+        std::cout << "test1" << std::endl;
+        glPixelStorei(GL_UNPACK_ROW_LENGTH, width);
+        glPixelStorei(GL_UNPACK_SKIP_PIXELS, 0);
+        glPixelStorei(GL_UNPACK_SKIP_ROWS, 16);
+        //char* subimage = (char*)data+16*4;
+        //auto subimage = data+16;
+        //std::cout<<subimage<<std::endl;
+        //glPixelStorei(GL_UNPACK_ALIGNMENT, 1);
+        //glPixelStorei(GL_UNPACK_ROW_LENGTH, 0);
+        //glPixelStorei(GL_UNPACK_SKIP_PIXELS, 0);
+        //glPixelStorei(GL_UNPACK_SKIP_ROWS, 0);
+        std::cout << "width" << width << "height:" << height << std::endl;
+        glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, 16, 16, 0, GL_RGB, GL_UNSIGNED_BYTE, data);
+        //glPixelStorei(GL_UNPACK_ROW_LENGTH, 0);
+        glPixelStorei(GL_UNPACK_ROW_LENGTH, 0);
+        glPixelStorei(GL_UNPACK_SKIP_PIXELS, 0);
+        glPixelStorei(GL_UNPACK_SKIP_ROWS, 0);
+        std::cout << "test2" << std::endl;
+
         glGenerateMipmap(GL_TEXTURE_2D);
+        //glTexSubImage2D (GL_TEXTURE_2D, 0, 0, 0, 16, 16, GL_RGBA, GL_UNSIGNED_BYTE, data);
     } else {
         std::cout << "Failed to load texture" << std::endl;
     }
+    std::cout << "test" << std::endl;
     stbi_image_free(data);
     s.Use();
     glUniform1i(glGetUniformLocation(s.ID, "ourTexture1"), 0);
     // or set it via the texture class
     s.Set<int>("ourTexture2", 1);
+
+    //vector tingz
+
+    //glm::vec4 vec(1.0f, 0.0f, 0.0f, 1.0f);
+    //glm::mat4 trans = glm::mat4(1.0f);
+    ////std::cout<<"trans: "<<trans[0][1]<<std::endl;
+    //std::cout<<glm::to_string(trans)<<std::endl;
+    //trans = glm::translate(trans, glm::vec3(1.0f, 1.0f, 1.0f));
+    //std::cout<<glm::to_string(trans)<<std::endl;
+    //vec = trans*vec;
+    //std::cout<<vec.x<<" "<<vec.y<<" "<<vec.z<<std::endl;
+
+    //trans = glm::scale(trans, glm::vec3(0.5, 0.5, 0.5));
+
+    //end vector tingz
 
     //glUseProgram(program2);
 
@@ -179,6 +230,29 @@ void StartRender(GLFWwindow* window) {
         glBindTexture(GL_TEXTURE_2D, texture2);
         s.Use();
         glBindVertexArray(VAO);
+
+        glm::mat4 trans = glm::mat4(1.0f);
+        //trans = glm::translate(trans, glm::vec3(0.5f, -0.5f, 0.0f));
+        unsigned int transformLoc = glGetUniformLocation(s.ID, "transform");
+        trans = glm::rotate(trans, 0.0f, glm::vec3(0.0, 0.0, 1.0));
+        glUniformMatrix4fv(transformLoc, 1, GL_FALSE, glm::value_ptr(trans));
+
+        glm::mat4 model = glm::mat4(1.0f);
+        glm::mat4 view = glm::mat4(1.0f);
+        //glm::mat4 projection = glm::mat4(1.0f);
+        model = glm::rotate(model, glm::radians(-55.0f), glm::vec3(1.0f, 0.0f, 0.0f));
+        view = glm::translate(view, glm::vec3(0.0f, 0.0f, -3.0f));
+        glm::mat4 projection;
+        projection = glm::perspective(glm::radians(45.0f), 800.0f / 600.0f, 0.1f, 100.0f);
+
+        unsigned int modelLoc = glGetUniformLocation(s.ID, "model");
+        unsigned int viewLoc = glGetUniformLocation(s.ID, "view");
+        unsigned int projectionLoc = glGetUniformLocation(s.ID, "projection");
+        
+        glUniformMatrix4fv(modelLoc, 1, GL_FALSE, glm::value_ptr(model));
+        glUniformMatrix4fv(viewLoc, 1, GL_FALSE, &view[0][0]);
+        glUniformMatrix4fv(projectionLoc, 1, GL_FALSE, &projection[0][0]);
+        //s.SetM<glm::mat4>("model", model);
         //int vertexColorLocation = glGetUniformLocation(program2, "ourColor");
         //glUniform4f(vertexColorLocation, 0.0f, greenValue, 0.0f, 1.0f);
         //glActiveTexture(GL_TEXTURE0);
