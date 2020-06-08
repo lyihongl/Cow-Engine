@@ -17,7 +17,7 @@
 #include <iostream>
 #include <vector>
 
-namespace CowGraphics {
+namespace CowRender{
 class Shader;
 
 class Shader {
@@ -35,8 +35,11 @@ class Shader {
 
 Shader::Shader(const char* vertexPath, const char* fragmentPath) {
     // Create the shaders
+    std::cout<<"Shader"<<std::endl;
     GLuint VertexShaderID = glCreateShader(GL_VERTEX_SHADER);
     GLuint FragmentShaderID = glCreateShader(GL_FRAGMENT_SHADER);
+
+    std::cout<<"Shader"<<std::endl;
 
     // Read the Vertex Shader code from the file
     std::string VertexShaderCode;

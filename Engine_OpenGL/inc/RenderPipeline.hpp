@@ -7,11 +7,6 @@
 
 #include <iostream>
 #define GLFW_INCLUDE_NONE
-#include "../inc/Shaders.hpp"
-#include "../inc/linmath.h"
-#include "../inc/stb_image.h"
-
-
 #include <GLFW/glfw3.h>
 #include <stdio.h>
 #include <stdlib.h>
@@ -22,8 +17,11 @@
 #include <glm/gtx/string_cast.hpp>
 #include <memory>
 
+#include "../inc/Shaders.hpp"
+#include "../inc/linmath.h"
+#include "../inc/stb_image.h"
 
-namespace CowGraphics {
+namespace CowRender {
 
 struct OpenGLContext;
 struct DeleteGLFWwindow;
@@ -74,11 +72,73 @@ void framebuffer_size_callback(GLFWwindow* window, int width, int height) {
               << "( " << width << ", " << height << ") " << std::endl;
 }
 
+void DrawQuad() {
+    float vertices[] = {
+        0.5f, 0.5f, 0.0f,    // top right
+        0.5f, -0.5f, 0.0f,   // bottom right
+        0.0f, -0.5f, 0.0f,  // bottom left
+        0.0f, 0.5f, 0.0f    // top left
+    };
+    unsigned int indices[] = {
+        // note that we start from 0!
+        0, 1, 3,  // first triangle
+        1, 2, 3   // second triangle
+    };
+
+    unsigned int VAO, EBO, VBO;
+    glGenBuffers(1, &VBO);
+    glGenBuffers(1, &EBO);
+    glGenVertexArrays(1, &VAO);
+
+    glBindVertexArray(VAO);
+
+    glBindBuffer(GL_ARRAY_BUFFER, VBO);
+    glBufferData(GL_ARRAY_BUFFER, sizeof(vertices), vertices, GL_STATIC_DRAW);
+
+    glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, EBO);
+    glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(indices), indices, GL_STATIC_DRAW);
+
+    glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 3*sizeof(float), (void*)0);
+    glEnableVertexAttribArray(0);
+
+    //glBindVertexArray(0);
+}
+
+void Draw(GLFWwindow* window, Shader& shader) {
+    std::cout<<"Draw"<<std::endl;
+    DrawQuad();
+    while (!glfwWindowShouldClose(window))
+    {
+        // input
+        // -----
+        //processInput(window);
+
+        // render
+        // ------
+        shader.Use();
+        glClearColor(0.2f, 0.3f, 0.3f, 1.0f);
+        glClear(GL_COLOR_BUFFER_BIT);
+
+        // draw our first triangle
+        //glUseProgram(shaderProgram);
+        //glBindVertexArray(VAO); // seeing as we only have a single VAO there's no need to bind it every time, but we'll do so to keep things a bit more organized
+        //glDrawArrays(GL_TRIANGLES, 0, 6);
+        glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, 0);
+        // glBindVertexArray(0); // no need to unbind it every time 
+ 
+        // glfw: swap buffers and poll IO events (keys pressed/released, mouse moved etc.)
+        // -------------------------------------------------------------------------------
+        glfwSwapBuffers(window);
+        glfwPollEvents();
+    }
+}
+
 void StartRender(GLFWwindow* window) {
-    //float vertices[] = {
-    //    -0.5f, -0.5f, 0.0f,
-    //    0.5f, -0.5f, 0.0f,
-    //    0.0f, 0.5f, 0.0f};
+    std::cout<<"a"<<std::endl;
+    float vertices[] = {
+        -0.5f, -0.5f, 0.0f,
+        0.5f, -0.5f, 0.0f,
+        0.0f, 0.5f, 0.0f};
     //float vertices[] = {
     //    // positions         // colors
     //    0.0f, -0.5f, 0.0f, 1.0f, 0.0f, 0.0f,  // bottom right
@@ -92,13 +152,50 @@ void StartRender(GLFWwindow* window) {
     //    -0.5f, -0.5f, 0.0f, 0.0f, 0.0f, 1.0f, 0.0f, 0.0f,  // bottom left
     //    -0.5f, 0.5f, 0.0f, 1.0f, 1.0f, 0.0f, 0.0f, 1.0f    // top left
     //};
-    float vertices[] = {
-        // positions          // texture coords
-        0.5f, 0.5f, 0.0f, 1.0f, 1.0f,    // top right
-        0.5f, -0.5f, 0.0f, 1.0f, 0.0f,   // bottom right
-        -0.5f, -0.5f, 0.0f, 0.0f, 0.0f,  // bottom left
-        -0.5f, 0.5f, 0.0f, 0.0f, 1.0f    // top left
-    };
+    //glEnable(GL_DEPTH_TEST);
+    //float vertices[] = {
+    //-0.5f, -0.5f, -0.5f,  0.0f, 0.0f,
+    // 0.5f, -0.5f, -0.5f,  1.0f, 0.0f,
+    // 0.5f,  0.5f, -0.5f,  1.0f, 1.0f,
+    // 0.5f,  0.5f, -0.5f,  1.0f, 1.0f,
+    //-0.5f,  0.5f, -0.5f,  0.0f, 1.0f,
+    //-0.5f, -0.5f, -0.5f,  0.0f, 0.0f,
+
+    //-0.5f, -0.5f,  0.5f,  0.0f, 0.0f,
+    //0.5f, -0.5f,  0.5f,  1.0f, 0.0f,
+    //0.5f,  0.5f,  0.5f,  1.0f, 1.0f,
+    //0.5f,  0.5f,  0.5f,  1.0f, 1.0f,
+    //-0.5f,  0.5f,  0.5f,  0.0f, 1.0f,
+    //-0.5f, -0.5f,  0.5f,  0.0f, 0.0f,
+
+    //-0.5f,  0.5f,  0.5f,  1.0f, 0.0f,
+    //-0.5f,  0.5f, -0.5f,  1.0f, 1.0f,
+    //-0.5f, -0.5f, -0.5f,  0.0f, 1.0f,
+    //-0.5f, -0.5f, -0.5f,  0.0f, 1.0f,
+    //-0.5f, -0.5f,  0.5f,  0.0f, 0.0f,
+    //-0.5f,  0.5f,  0.5f,  1.0f, 0.0f,
+
+    //0.5f,  0.5f,  0.5f,  1.0f, 0.0f,
+    //0.5f,  0.5f, -0.5f,  1.0f, 1.0f,
+    //0.5f, -0.5f, -0.5f,  0.0f, 1.0f,
+    //0.5f, -0.5f, -0.5f,  0.0f, 1.0f,
+    //0.5f, -0.5f,  0.5f,  0.0f, 0.0f,
+    //0.5f,  0.5f,  0.5f,  1.0f, 0.0f,
+
+    //-0.5f, -0.5f, -0.5f,  0.0f, 1.0f,
+    //0.5f, -0.5f, -0.5f,  1.0f, 1.0f,
+    //0.5f, -0.5f,  0.5f,  1.0f, 0.0f,
+    //0.5f, -0.5f,  0.5f,  1.0f, 0.0f,
+    //-0.5f, -0.5f,  0.5f,  0.0f, 0.0f,
+    //-0.5f, -0.5f, -0.5f,  0.0f, 1.0f,
+
+    //-0.5f,  0.5f, -0.5f,  0.0f, 1.0f,
+    //0.5f,  0.5f, -0.5f,  1.0f, 1.0f,
+    //0.5f,  0.5f,  0.5f,  1.0f, 0.0f,
+    //0.5f,  0.5f,  0.5f,  1.0f, 0.0f,
+    //-0.5f,  0.5f,  0.5f,  0.0f, 0.0f,
+    //-0.5f,  0.5f, -0.5f,  0.0f, 1.0f
+    //};
     unsigned int indices[] = {
         1, 2, 3,
         0, 1, 3};
@@ -220,7 +317,7 @@ void StartRender(GLFWwindow* window) {
 
     while (!glfwWindowShouldClose(window)) {
         glClearColor(0.2f, 0.3f, 0.3f, 1.0f);
-        glClear(GL_COLOR_BUFFER_BIT);
+        glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
         //float timeValue = glfwGetTime();
         //float greenValue = sin(timeValue) / 2.0f + 0.5f;
@@ -240,7 +337,7 @@ void StartRender(GLFWwindow* window) {
         glm::mat4 model = glm::mat4(1.0f);
         glm::mat4 view = glm::mat4(1.0f);
         //glm::mat4 projection = glm::mat4(1.0f);
-        model = glm::rotate(model, glm::radians(-55.0f), glm::vec3(1.0f, 0.0f, 0.0f));
+        model = glm::rotate(model, (float)glfwGetTime(), glm::vec3(1.0f, 0.5f, 0.0f));
         view = glm::translate(view, glm::vec3(0.0f, 0.0f, -3.0f));
         glm::mat4 projection;
         projection = glm::perspective(glm::radians(45.0f), 800.0f / 600.0f, 0.1f, 100.0f);
@@ -248,10 +345,11 @@ void StartRender(GLFWwindow* window) {
         unsigned int modelLoc = glGetUniformLocation(s.ID, "model");
         unsigned int viewLoc = glGetUniformLocation(s.ID, "view");
         unsigned int projectionLoc = glGetUniformLocation(s.ID, "projection");
-        
+
         glUniformMatrix4fv(modelLoc, 1, GL_FALSE, glm::value_ptr(model));
         glUniformMatrix4fv(viewLoc, 1, GL_FALSE, &view[0][0]);
         glUniformMatrix4fv(projectionLoc, 1, GL_FALSE, &projection[0][0]);
+
         //s.SetM<glm::mat4>("model", model);
         //int vertexColorLocation = glGetUniformLocation(program2, "ourColor");
         //glUniform4f(vertexColorLocation, 0.0f, greenValue, 0.0f, 1.0f);
@@ -260,6 +358,7 @@ void StartRender(GLFWwindow* window) {
 
         //glActiveTexture(GL_TEXTURE1);
         glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, 0);
+        //glDrawArrays(GL_TRIANGLES, 0, 36);
 
         //glDrawArrays(GL_TRIANGLES, 0, 3);
 
@@ -268,4 +367,4 @@ void StartRender(GLFWwindow* window) {
     }
 }
 
-}  // namespace CowGraphics
+}  // namespace CowRender

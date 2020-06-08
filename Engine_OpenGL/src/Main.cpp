@@ -8,11 +8,12 @@
 #include <stdio.h>
 #include <stdlib.h>
 
-#include "../inc/Shaders.hpp"
 #include "../inc/Storage.hpp"
 #include "../inc/linmath.h"
 #include "../inc/DefaultComponents.hpp"
 #include "../inc/RenderPipeline.hpp"
+#include "../inc/Shaders.hpp"
+#include "../inc/RenderUnit.hpp"
 
 
 
@@ -24,9 +25,14 @@ int main(int argc, char* args[]) {
     Cow::InitDefault2D(c);
     std::cout<<"test: "<<(c.TMap.find<Cow::Physics2D>()->second)<<std::endl;
     //auto window = std::move(CowGraphics::InitGLFW());
-    auto window = CowGraphics::InitGLFW();
+    std::cout<<"test"<<std::endl;
+    auto window = CowRender::InitGLFW();
+    //float teset[] = {1.0f, 1.0f, 1.0f};
+    //std::cout<<"size"<<sizeof(teset)<<std::endl; 
+    CowRender::Shader s{"./Engine_OpenGL/shaders/quadVertexShader.glsl", "./Engine_OpenGL/shaders/quadFragShader.glsl"};
 
-    CowGraphics::StartRender(window.get());
+    //CowGraphics::StartRender(window.get());
+    CowRender::Draw(window.get(), s);
 
     std::cout<<"crash"<<std::endl;
     glfwTerminate();

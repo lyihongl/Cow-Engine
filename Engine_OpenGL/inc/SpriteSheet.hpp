@@ -20,4 +20,11 @@ namespace CowGraphics {
         sheet->SpriteData.push_back(width);
         sheet->SpriteData.push_back(height);
     }
+
+    void DrawSprite(SpriteSheet& sheet, int location){
+
+    }
+    void DrawQuad(){
+
+    }
 };
