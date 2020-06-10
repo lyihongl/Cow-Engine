@@ -17,9 +17,10 @@
 #include <glm/gtx/string_cast.hpp>
 #include <memory>
 
-#include "../inc/Shaders.hpp"
-#include "../inc/linmath.h"
-#include "../inc/stb_image.h"
+#include "RenderUnit.hpp"
+#include "linmath.h"
+#include "shaders.hpp"
+#include "stb_image.h"
 
 namespace CowRender {
 
@@ -71,11 +72,44 @@ void framebuffer_size_callback(GLFWwindow* window, int width, int height) {
     std::cout << "window resized to (w, h): "
               << "( " << width << ", " << height << ") " << std::endl;
 }
-
-void DrawQuad() {
+void DrawQuad2(RenderUnit::RenderUnit &r) {
     float vertices[] = {
-        0.5f, 0.5f, 0.0f,    // top right
-        0.5f, -0.5f, 0.0f,   // bottom right
+        -0.1f, 0.5f, 0.0f,   // top right
+        -0.1f, -0.5f, 0.0f,  // bottom right
+        -0.5f, -0.5f, 0.0f,  // bottom left
+        -0.5f, 0.5f, 0.0f    // top left
+    };
+    //float vertices[] = {
+    //    0.5f, 0.5f, 0.0f,   // top right
+    //    0.5f, -0.5f, 0.0f,  // bottom right
+    //    0.0f, -0.5f, 0.0f,  // bottom left
+    //    0.0f, 0.5f, 0.0f    // top left
+    //};
+    unsigned int indices[] = {
+        // note that we start from 0!
+        0, 1, 3,  // first triangle
+        1, 2, 3   // second triangle
+    };
+    std::cout<<"DEBUG"<<__LINE__<<std::endl;
+    RenderUnit::RenderUnit ru;
+    RenderUnit::SetVertexData(ru, vertices, 12, 3);
+    RenderUnit::SetIndexData(ru, indices, 6);
+
+    glGenVertexArrays(1, &ru.VAO);
+    glBindVertexArray(ru.VAO);
+
+    //RenderUnit::InitVAO(ru);
+    RenderUnit::InitVBO(ru);
+    RenderUnit::InitEBO(ru);
+    glVertexAttribPointer(0, ru.Stride, GL_FLOAT, GL_FALSE, ru.Stride * sizeof(float), (void*)0);
+    glEnableVertexAttribArray(0);
+    r = ru;
+}
+
+void DrawQuad(int &v) {
+    float vertices[] = {
+        0.5f, 0.5f, 0.0f,   // top right
+        0.5f, -0.5f, 0.0f,  // bottom right
         0.0f, -0.5f, 0.0f,  // bottom left
         0.0f, 0.5f, 0.0f    // top left
     };
@@ -94,21 +128,29 @@ void DrawQuad() {
 
     glBindBuffer(GL_ARRAY_BUFFER, VBO);
     glBufferData(GL_ARRAY_BUFFER, sizeof(vertices), vertices, GL_STATIC_DRAW);
+    std::cout<<"DEBUG vbo size"<<sizeof(vertices)<<std::endl;
 
     glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, EBO);
     glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(indices), indices, GL_STATIC_DRAW);
+    std::cout<<"DEBUG ebo size"<<sizeof(indices)<<std::endl;
 
-    glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 3*sizeof(float), (void*)0);
+    glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 3 * sizeof(float), (void*)0);
     glEnableVertexAttribArray(0);
+
+    v = VAO;
 
     //glBindVertexArray(0);
 }
 
 void Draw(GLFWwindow* window, Shader& shader) {
-    std::cout<<"Draw"<<std::endl;
-    DrawQuad();
-    while (!glfwWindowShouldClose(window))
-    {
+    std::cout << "Draw" << std::endl;
+    //DrawQuad2();
+    RenderUnit::RenderUnit r;
+    int vao2;
+    DrawQuad2(r);
+    DrawQuad(vao2);
+    std::cout<<"DEBUG"<<__LINE__<<std::endl;
+    while (!glfwWindowShouldClose(window)) {
         // input
         // -----
         //processInput(window);
@@ -121,11 +163,14 @@ void Draw(GLFWwindow* window, Shader& shader) {
 
         // draw our first triangle
         //glUseProgram(shaderProgram);
-        //glBindVertexArray(VAO); // seeing as we only have a single VAO there's no need to bind it every time, but we'll do so to keep things a bit more organized
+        glBindVertexArray(r.VAO); // seeing as we only have a single VAO there's no need to bind it every time, but we'll do so to keep things a bit more organized
         //glDrawArrays(GL_TRIANGLES, 0, 6);
         glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, 0);
-        // glBindVertexArray(0); // no need to unbind it every time 
- 
+        glBindVertexArray(vao2); // seeing as we only have a single VAO there's no need to bind it every time, but we'll do so to keep things a bit more organized
+        //glDrawArrays(GL_TRIANGLES, 0, 6);
+        glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, 0);
+        // glBindVertexArray(0); // no need to unbind it every time
+
         // glfw: swap buffers and poll IO events (keys pressed/released, mouse moved etc.)
         // -------------------------------------------------------------------------------
         glfwSwapBuffers(window);
@@ -134,7 +179,7 @@ void Draw(GLFWwindow* window, Shader& shader) {
 }
 
 void StartRender(GLFWwindow* window) {
-    std::cout<<"a"<<std::endl;
+    std::cout << "a" << std::endl;
     float vertices[] = {
         -0.5f, -0.5f, 0.0f,
         0.5f, -0.5f, 0.0f,
