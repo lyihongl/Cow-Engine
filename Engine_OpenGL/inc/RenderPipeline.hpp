@@ -114,10 +114,10 @@ void DrawQuad2(RenderUnit::RenderUnit& r) {
 
 void DrawQuad(int& v) {
     float vertices[] = {
-        0.1f, 0.1f, 0.0f,    // top right
-        0.1f, -0.1f, 0.0f,   // bottom right
-        -0.1f, -0.1f, 0.0f,  // bottom left
-        -0.1f, 0.1f, 0.0f    // top left
+        0.1f, 0.1f, 0.0f, 1.0f, 1.0f,// top right
+        0.1f, -0.1f, 0.0f, 1.0f, 0.0f,// bottom right
+        -0.1f, -0.1f, 0.0f, 0.0f, 0.0f,// bottom left
+        -0.1f, 0.1f, 0.0f, 0.0f, 1.0f// top left
     };
     unsigned int indices[] = {
         // note that we start from 0!
@@ -140,21 +140,52 @@ void DrawQuad(int& v) {
     glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(indices), indices, GL_STATIC_DRAW);
     std::cout << "DEBUG ebo size" << sizeof(indices) << std::endl;
 
-    glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 3 * sizeof(float), (void*)0);
+    glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 5 * sizeof(float), (void*)0);
+    glVertexAttribPointer(1, 2, GL_FLOAT, GL_FALSE, 5*sizeof(float), (void*)(3*sizeof(float)));
     glEnableVertexAttribArray(0);
+    glEnableVertexAttribArray(1);
 
     v = VAO;
 
     //glBindVertexArray(0);
 }
+void Draw2(GLFWwindow* window, Shader& shader){
+
+}
 
 void Draw(GLFWwindow* window, Shader& shader) {
     std::cout << "Draw" << std::endl;
+
+
+
+
+    //glUniform1i(glGetUniformLocation(shader.ID, "ourTexture1"), 0);
+    // or set it via the texture class
+
     //DrawQuad2();
     RenderUnit::RenderUnit r;
-    RenderUnit::RenderUnit r2;
+    std::cout<<__LINE__<<std::endl;
+    //RenderUnit::RenderUnit r2;
     DrawQuad2(r);
-    DrawQuad2(r2);
+
+    unsigned int texture1;
+    glGenTextures(1, &texture1);
+    glBindTexture(GL_TEXTURE_2D, texture1);
+
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_MIRRORED_REPEAT);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_MIRRORED_REPEAT);
+
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+
+    //int width, height, nrChannels;
+    //stbi_set_flip_vertically_on_load(true);
+    //glPixelStorei(GL_UNPACK_ALIGNMENT, 1);
+    //stbi_image_free(data);
+    std::cout<<__LINE__<<std::endl;
+    //shader.Set<int>("ourTexture2", 1);
+    //DrawQuad2(r2);
+
     //DrawQuad(vao2);
     std::cout << "DEBUG" << __LINE__ << std::endl;
     while (!glfwWindowShouldClose(window)) {
@@ -162,15 +193,14 @@ void Draw(GLFWwindow* window, Shader& shader) {
         glGetIntegerv(GL_VIEWPORT, m_viewport);
         std::cout << "viewport: " << m_viewport[0] << " " << m_viewport[1] << " " << m_viewport[2] << " " << m_viewport[3] << std::endl;
 
+        //glBindTexture(GL_TEXTURE_2D, texture1);
+
         glm::mat4 model = glm::mat4(1.0f);
         model = glm::scale(model, glm::vec3((float)(m_viewport[3]) / (float)(m_viewport[2]), 1.0f, 1.0f));
         int modelLoc = glGetUniformLocation(shader.ID, "model");
         glUniformMatrix4fv(modelLoc, 1, GL_FALSE, glm::value_ptr(model));
-
         glm::mat4 view = glm::mat4(1.0f);
-        // note that we're translating the scene in the reverse direction of where we want to move
         view = glm::translate(view, glm::vec3(-1.0f+0.1f*(float)(m_viewport[3])/(float)(m_viewport[2]), 1.0f-0.1f, 0.0f));
-        //std::cout<<"debug"<<1.0f-(0.1f*(float)(m_viewport[3])/(float)(m_viewport[2]))<<std::endl;
 
         int viewLoc = glGetUniformLocation(shader.ID, "view");
 
@@ -199,6 +229,12 @@ void Draw(GLFWwindow* window, Shader& shader) {
 
         view = glm::mat4(1.0f);
         view = glm::translate(view, glm::vec3(-1.0f+0.31f*(float)(m_viewport[3])/(float)(m_viewport[2]), 1.0f-0.1f, 0.0f));
+        glUniformMatrix4fv(viewLoc, 1, GL_FALSE, glm::value_ptr(view));
+
+        glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, 0);
+
+        view = glm::mat4(1.0f);
+        view = glm::translate(view, glm::vec3(-1.0f+0.52f*(float)(m_viewport[3])/(float)(m_viewport[2]), 1.0f-0.1f, 0.0f));
         glUniformMatrix4fv(viewLoc, 1, GL_FALSE, glm::value_ptr(view));
 
 
@@ -381,7 +417,7 @@ void StartRender(GLFWwindow* window) {
     s.Use();
     glUniform1i(glGetUniformLocation(s.ID, "ourTexture1"), 0);
     // or set it via the texture class
-    s.Set<int>("ourTexture2", 1);
+    //s.Set<int>("ourTexture2", 1);
 
     //vector tingz
 
