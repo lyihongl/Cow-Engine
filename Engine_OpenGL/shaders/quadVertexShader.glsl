@@ -9,5 +9,5 @@ uniform mat4 view;
 
 void main(){
     gl_Position = view*model*vec4(aPos, 1.0);
-    TexCoord = vec2(aTexCoord.x, aTexCoord.y);
+    TexCoord = vec2(aTexCoord.x*16/512+16.0f/512*0, aTexCoord.y*16/512+16.0f/512*1);
 }

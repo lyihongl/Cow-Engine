@@ -79,11 +79,17 @@ void DrawQuad2(RenderUnit::RenderUnit& r) {
     //    -0.5f, -0.5f, 0.0f,  // bottom left
     //    -0.5f, 0.5f, 0.0f    // top left
     //};
+    //float vertices[] = {
+    //    0.1f, 0.1f, 0.0f,    // top right
+    //    0.1f, -0.1f, 0.0f,   // bottom right
+    //    -0.1f, -0.1f, 0.0f,  // bottom left
+    //    -0.1f, 0.1f, 0.0f    // top left
+    //};
     float vertices[] = {
-        0.1f, 0.1f, 0.0f,    // top right
-        0.1f, -0.1f, 0.0f,   // bottom right
-        -0.1f, -0.1f, 0.0f,  // bottom left
-        -0.1f, 0.1f, 0.0f    // top left
+        0.1f, 0.1f, 0.0f, 1.0f, 1.0f,    // top right
+        0.1f, -0.1f, 0.0f, 1.0f, 0.0f,   // bottom right
+        -0.1f, -0.1f, 0.0f, 0.0f, 0.0f,  // bottom left
+        -0.1f, 0.1f, 0.0f, 0.0f, 1.0f    // top left
     };
     //float vertices[] = {
     //    0.5f, 0.5f, 0.0f,   // top right
@@ -98,7 +104,7 @@ void DrawQuad2(RenderUnit::RenderUnit& r) {
     };
     std::cout << "DEBUG" << __LINE__ << std::endl;
     RenderUnit::RenderUnit ru;
-    RenderUnit::SetVertexData(ru, vertices, 12, 3);
+    RenderUnit::SetVertexData(ru, vertices, 20, 5);
     RenderUnit::SetIndexData(ru, indices, 6);
 
     glGenVertexArrays(1, &ru.VAO);
@@ -107,64 +113,26 @@ void DrawQuad2(RenderUnit::RenderUnit& r) {
     //RenderUnit::InitVAO(ru);
     RenderUnit::InitVBO(ru);
     RenderUnit::InitEBO(ru);
-    glVertexAttribPointer(0, ru.Stride, GL_FLOAT, GL_FALSE, ru.Stride * sizeof(float), (void*)0);
+    glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 5 * sizeof(float), (void*)0);
     glEnableVertexAttribArray(0);
+    glVertexAttribPointer(1, 2, GL_FLOAT, GL_FALSE, 5 * sizeof(float), (void*)(3 * sizeof(float)));
+    glEnableVertexAttribArray(1);
+    //    glEnableVertexAttribArray(1);
     r = ru;
 }
 
-void DrawQuad(int& v) {
-    float vertices[] = {
-        0.1f, 0.1f, 0.0f, 1.0f, 1.0f,// top right
-        0.1f, -0.1f, 0.0f, 1.0f, 0.0f,// bottom right
-        -0.1f, -0.1f, 0.0f, 0.0f, 0.0f,// bottom left
-        -0.1f, 0.1f, 0.0f, 0.0f, 1.0f// top left
-    };
-    unsigned int indices[] = {
-        // note that we start from 0!
-        0, 1, 3,  // first triangle
-        1, 2, 3   // second triangle
-    };
-
-    unsigned int VAO, EBO, VBO;
-    glGenBuffers(1, &VBO);
-    glGenBuffers(1, &EBO);
-    glGenVertexArrays(1, &VAO);
-
-    glBindVertexArray(VAO);
-
-    glBindBuffer(GL_ARRAY_BUFFER, VBO);
-    glBufferData(GL_ARRAY_BUFFER, sizeof(vertices), vertices, GL_STATIC_DRAW);
-    std::cout << "DEBUG vbo size" << sizeof(vertices) << std::endl;
-
-    glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, EBO);
-    glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(indices), indices, GL_STATIC_DRAW);
-    std::cout << "DEBUG ebo size" << sizeof(indices) << std::endl;
-
-    glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 5 * sizeof(float), (void*)0);
-    glVertexAttribPointer(1, 2, GL_FLOAT, GL_FALSE, 5*sizeof(float), (void*)(3*sizeof(float)));
-    glEnableVertexAttribArray(0);
-    glEnableVertexAttribArray(1);
-
-    v = VAO;
-
-    //glBindVertexArray(0);
-}
-void Draw2(GLFWwindow* window, Shader& shader){
-
+void Draw2(GLFWwindow* window, Shader& shader) {
 }
 
 void Draw(GLFWwindow* window, Shader& shader) {
     std::cout << "Draw" << std::endl;
-
-
-
 
     //glUniform1i(glGetUniformLocation(shader.ID, "ourTexture1"), 0);
     // or set it via the texture class
 
     //DrawQuad2();
     RenderUnit::RenderUnit r;
-    std::cout<<__LINE__<<std::endl;
+    std::cout << __LINE__ << std::endl;
     //RenderUnit::RenderUnit r2;
     DrawQuad2(r);
 
@@ -176,17 +144,35 @@ void Draw(GLFWwindow* window, Shader& shader) {
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_MIRRORED_REPEAT);
 
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
-    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
 
-    //int width, height, nrChannels;
-    //stbi_set_flip_vertically_on_load(true);
+    int width, height, nrChannels;
+    stbi_set_flip_vertically_on_load(true);
+    unsigned char* data = stbi_load("./Engine_OpenGL/assets/testsheet.png", &width, &height, &nrChannels, 0);
+
+    if (data) {
+        // note that the awesomeface.png has transparency and thus an alpha channel, so make sure to tell OpenGL the data type is of GL_RGBA
+        std::cout << "test1" << std::endl;
+        //glPixelStorei(GL_UNPACK_ROW_LENGTH, width);
+        //glPixelStorei(GL_UNPACK_SKIP_PIXELS, 0);
+        //glPixelStorei(GL_UNPACK_SKIP_ROWS, 16);
+        std::cout << "width" << width << "height:" << height << std::endl;
+        glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, width, height, 0, GL_RGB, GL_UNSIGNED_BYTE, data);
+        //glPixelStorei(GL_UNPACK_ROW_LENGTH, 0);
+        //glPixelStorei(GL_UNPACK_ROW_LENGTH, 0);
+        //glPixelStorei(GL_UNPACK_SKIP_PIXELS, 0);
+        glPixelStorei(GL_UNPACK_SKIP_ROWS, 0);
+        std::cout << "test2" << std::endl;
+
+        glGenerateMipmap(GL_TEXTURE_2D);
+        //glTexSubImage2D (GL_TEXTURE_2D, 0, 0, 0, 16, 16, GL_RGBA, GL_UNSIGNED_BYTE, data);
+    } else {
+        std::cout << "Failed to load texture" << std::endl;
+    }
     //glPixelStorei(GL_UNPACK_ALIGNMENT, 1);
-    //stbi_image_free(data);
-    std::cout<<__LINE__<<std::endl;
+    stbi_image_free(data);
+    std::cout << __LINE__ << std::endl;
     //shader.Set<int>("ourTexture2", 1);
-    //DrawQuad2(r2);
-
-    //DrawQuad(vao2);
     std::cout << "DEBUG" << __LINE__ << std::endl;
     while (!glfwWindowShouldClose(window)) {
         GLint m_viewport[4];
@@ -200,11 +186,12 @@ void Draw(GLFWwindow* window, Shader& shader) {
         int modelLoc = glGetUniformLocation(shader.ID, "model");
         glUniformMatrix4fv(modelLoc, 1, GL_FALSE, glm::value_ptr(model));
         glm::mat4 view = glm::mat4(1.0f);
-        view = glm::translate(view, glm::vec3(-1.0f+0.1f*(float)(m_viewport[3])/(float)(m_viewport[2]), 1.0f-0.1f, 0.0f));
+        view = glm::translate(view, glm::vec3(-1.0f + 0.1f * (float)(m_viewport[3]) / (float)(m_viewport[2]), 1.0f - 0.1f, 0.0f));
 
         int viewLoc = glGetUniformLocation(shader.ID, "view");
 
         glUniformMatrix4fv(viewLoc, 1, GL_FALSE, glm::value_ptr(view));
+
         // input
         // -----
         //processInput(window);
@@ -214,6 +201,8 @@ void Draw(GLFWwindow* window, Shader& shader) {
         shader.Use();
         glClearColor(0.2f, 0.3f, 0.3f, 1.0f);
         glClear(GL_COLOR_BUFFER_BIT);
+        //glActiveTexture(GL_TEXTURE);
+        glBindTexture(GL_TEXTURE_2D, texture1);
 
         // draw our first triangle
         //glUseProgram(shaderProgram);
@@ -221,32 +210,22 @@ void Draw(GLFWwindow* window, Shader& shader) {
         //glDrawArrays(GL_TRIANGLES, 0, 6);
         glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, 0);
 
-
-
         model = glm::mat4(1.0f);
         model = glm::scale(model, glm::vec3((float)(m_viewport[3]) / (float)(m_viewport[2]), 1.0f, 1.0f));
         glUniformMatrix4fv(modelLoc, 1, GL_FALSE, glm::value_ptr(model));
 
         view = glm::mat4(1.0f);
-        view = glm::translate(view, glm::vec3(-1.0f+0.31f*(float)(m_viewport[3])/(float)(m_viewport[2]), 1.0f-0.1f, 0.0f));
+        view = glm::translate(view, glm::vec3(-1.0f + 0.30f * (float)(m_viewport[3]) / (float)(m_viewport[2]), 1.0f - 0.1f, 0.0f));
         glUniformMatrix4fv(viewLoc, 1, GL_FALSE, glm::value_ptr(view));
 
         glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, 0);
 
         view = glm::mat4(1.0f);
-        view = glm::translate(view, glm::vec3(-1.0f+0.52f*(float)(m_viewport[3])/(float)(m_viewport[2]), 1.0f-0.1f, 0.0f));
+        view = glm::translate(view, glm::vec3(-1.0f + 0.50f * (float)(m_viewport[3]) / (float)(m_viewport[2]), 1.0f - 0.1f, 0.0f));
         glUniformMatrix4fv(viewLoc, 1, GL_FALSE, glm::value_ptr(view));
-
-
-
 
         //glBindVertexArray(r2.VAO);
         glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, 0);
-        //glBindVertexArray(vao2); // seeing as we only have a single VAO there's no need to bind it every time, but we'll do so to keep things a bit more organized
-        ////glDrawArrays(GL_TRIANGLES, 0, 6);
-        //glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, 0);
-        // glBindVertexArray(0); // no need to unbind it every time
-
         // glfw: swap buffers and poll IO events (keys pressed/released, mouse moved etc.)
         // -------------------------------------------------------------------------------
         glfwSwapBuffers(window);
