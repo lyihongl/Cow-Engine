@@ -64,6 +64,7 @@ std::unique_ptr<GLFWwindow, DeleteGLFWwindow> InitGLFW() {
     glfwSetFramebufferSizeCallback(window.get(), framebuffer_size_callback);
     //glfwSetFramebufferSizeCallback(window, framebuffer_size_callback);
     std::cout << "a" << std::endl;
+    glEnable(GL_DEPTH_TEST);
     return window;
 }
 
@@ -85,11 +86,48 @@ void DrawQuad2(RenderUnit::RenderUnit& r) {
     //    -0.1f, -0.1f, 0.0f,  // bottom left
     //    -0.1f, 0.1f, 0.0f    // top left
     //};
+
+    glm::vec4 translations[100];
+    int index = 0;
+    float offset = 0.1f;
+    for (int y = -10; y < 10; y += 2) {
+        for (int x = -10; x < 10; x += 2) {
+            glm::vec4 translation;
+            translation.x = (float)x / 10.0f + offset;
+            translation.y = (float)y / 10.0f + offset;
+            if(index%3 == 0){
+                translation.z = 0;
+                translation.w = 0;
+            } else if(index%3==1){
+                translation.z = 0;
+                translation.w = 31;
+            } else {
+                translation.z = 1;
+                translation.w = 0;
+            }
+            //translation.x =
+            translations[index++] = translation;
+        }
+    }
+
+    // store instance data in an array buffer
+    // --------------------------------------
+    unsigned int instanceVBO;
+    glGenBuffers(1, &instanceVBO);
+    glBindBuffer(GL_ARRAY_BUFFER, instanceVBO);
+    glBufferData(GL_ARRAY_BUFFER, sizeof(glm::vec4) * 100, &translations[0], GL_STATIC_DRAW);
+    glBindBuffer(GL_ARRAY_BUFFER, 0);
+
+
+
     float vertices[] = {
         0.1f, 0.1f, 0.0f, 1.0f, 1.0f,    // top right
         0.1f, -0.1f, 0.0f, 1.0f, 0.0f,   // bottom right
+        -0.1f, 0.1f, 0.0f, 0.0f, 1.0f,    // top left
+
         -0.1f, -0.1f, 0.0f, 0.0f, 0.0f,  // bottom left
-        -0.1f, 0.1f, 0.0f, 0.0f, 1.0f    // top left
+        -0.1f, 0.1f, 0.0f, 0.0f, 1.0f,    // top left
+        0.1f, -0.1f, 0.0f, 1.0f, 0.0f,   // bottom right
     };
     //float vertices[] = {
     //    0.5f, 0.5f, 0.0f,   // top right
@@ -104,19 +142,25 @@ void DrawQuad2(RenderUnit::RenderUnit& r) {
     };
     std::cout << "DEBUG" << __LINE__ << std::endl;
     RenderUnit::RenderUnit ru;
-    RenderUnit::SetVertexData(ru, vertices, 20, 5);
-    RenderUnit::SetIndexData(ru, indices, 6);
+    RenderUnit::SetVertexData(ru, vertices, 30, 5);
+    //RenderUnit::SetIndexData(ru, indices, 6);
 
     glGenVertexArrays(1, &ru.VAO);
     glBindVertexArray(ru.VAO);
 
     //RenderUnit::InitVAO(ru);
     RenderUnit::InitVBO(ru);
-    RenderUnit::InitEBO(ru);
-    glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 5 * sizeof(float), (void*)0);
+    //RenderUnit::InitEBO(ru);
     glEnableVertexAttribArray(0);
-    glVertexAttribPointer(1, 2, GL_FLOAT, GL_FALSE, 5 * sizeof(float), (void*)(3 * sizeof(float)));
+    glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 5 * sizeof(float), (void*)0);
     glEnableVertexAttribArray(1);
+    glVertexAttribPointer(1, 2, GL_FLOAT, GL_FALSE, 5 * sizeof(float), (void*)(3 * sizeof(float)));
+
+    glEnableVertexAttribArray(2);
+    glBindBuffer(GL_ARRAY_BUFFER, instanceVBO);
+    glVertexAttribPointer(2, 4, GL_FLOAT, GL_FALSE, 4 * sizeof(float), (void*)0);
+    glBindBuffer(GL_ARRAY_BUFFER, 0);
+    glVertexAttribDivisor(2, 1);
     //    glEnableVertexAttribArray(1);
     r = ru;
 }
@@ -133,8 +177,8 @@ void Draw(GLFWwindow* window, Shader& shader) {
     //DrawQuad2();
     RenderUnit::RenderUnit r;
     std::cout << __LINE__ << std::endl;
-    //RenderUnit::RenderUnit r2;
     DrawQuad2(r);
+    //RenderUnit::RenderUnit r2;
 
     unsigned int texture1;
     glGenTextures(1, &texture1);
@@ -175,12 +219,16 @@ void Draw(GLFWwindow* window, Shader& shader) {
     //shader.Set<int>("ourTexture2", 1);
     std::cout << "DEBUG" << __LINE__ << std::endl;
     while (!glfwWindowShouldClose(window)) {
+        shader.Use();
+        glClearColor(0.2f, 0.3f, 0.3f, 1.0f);
+        glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+
         GLint m_viewport[4];
         glGetIntegerv(GL_VIEWPORT, m_viewport);
         std::cout << "viewport: " << m_viewport[0] << " " << m_viewport[1] << " " << m_viewport[2] << " " << m_viewport[3] << std::endl;
         unsigned int spriteLoc = glGetUniformLocation(shader.ID, "spriteLoc");
-        int test[] = {0, 1};
-        glUniform1iv(spriteLoc, 2, test);
+        //int test[] = {0, 1};
+        //glUniform1iv(spriteLoc, 2, test);
 
         //glBindTexture(GL_TEXTURE_2D, texture1);
 
@@ -189,7 +237,7 @@ void Draw(GLFWwindow* window, Shader& shader) {
         int modelLoc = glGetUniformLocation(shader.ID, "model");
         glUniformMatrix4fv(modelLoc, 1, GL_FALSE, glm::value_ptr(model));
         glm::mat4 view = glm::mat4(1.0f);
-        view = glm::translate(view, glm::vec3(-1.0f + 0.1f * (float)(m_viewport[3]) / (float)(m_viewport[2]), 1.0f - 0.1f, 0.0f));
+        //view = glm::translate(view, glm::vec3(-1.0f + 0.1f * (float)(m_viewport[3]) / (float)(m_viewport[2]), 1.0f - 0.1f, 0.0f));
 
         int viewLoc = glGetUniformLocation(shader.ID, "view");
 
@@ -201,47 +249,44 @@ void Draw(GLFWwindow* window, Shader& shader) {
 
         // render
         // ------
-        shader.Use();
-        glClearColor(0.2f, 0.3f, 0.3f, 1.0f);
-        glClear(GL_COLOR_BUFFER_BIT);
         //glActiveTexture(GL_TEXTURE);
-        glBindTexture(GL_TEXTURE_2D, texture1);
+        //glBindTexture(GL_TEXTURE_2D, texture1);
 
         // draw our first triangle
         //glUseProgram(shaderProgram);
         glBindVertexArray(r.VAO);  // seeing as we only have a single VAO there's no need to bind it every time, but we'll do so to keep things a bit more organized
         //glDrawArrays(GL_TRIANGLES, 0, 6);
-        glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, 0);
+        //glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, 0);
 
-        model = glm::mat4(1.0f);
-        model = glm::scale(model, glm::vec3((float)(m_viewport[3]) / (float)(m_viewport[2]), 1.0f, 1.0f));
-        glUniformMatrix4fv(modelLoc, 1, GL_FALSE, glm::value_ptr(model));
+        //model = glm::mat4(1.0f);
+        //model = glm::scale(model, glm::vec3((float)(m_viewport[3]) / (float)(m_viewport[2]), 1.0f, 1.0f));
+        //glUniformMatrix4fv(modelLoc, 1, GL_FALSE, glm::value_ptr(model));
 
-        view = glm::mat4(1.0f);
-        view = glm::translate(view, glm::vec3(-1.0f + 0.30f * (float)(m_viewport[3]) / (float)(m_viewport[2]), 1.0f - 0.1f, 0.0f));
-        glUniformMatrix4fv(viewLoc, 1, GL_FALSE, glm::value_ptr(view));
-        test[0]=0;
-        test[1]=0;
-        glUniform1iv(spriteLoc, 2, test);
+        //view = glm::mat4(1.0f);
+        //view = glm::translate(view, glm::vec3(-1.0f + 0.30f * (float)(m_viewport[3]) / (float)(m_viewport[2]), 1.0f - 0.1f, 0.0f));
+        //glUniformMatrix4fv(viewLoc, 1, GL_FALSE, glm::value_ptr(view));
+        //test[0]=0;
+        //test[1]=0;
+        //glUniform1iv(spriteLoc, 2, test);
 
-        glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, 0);
+        //glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, 0);
 
-        test[0]=0;
-        test[1]=31;
-        glUniform1iv(spriteLoc, 2, test);
+        //test[0]=0;
+        //test[1]=31;
+        //glUniform1iv(spriteLoc, 2, test);
 
-        view = glm::mat4(1.0f);
-        view = glm::translate(view, glm::vec3(-1.0f + 0.50f * (float)(m_viewport[3]) / (float)(m_viewport[2]), 1.0f - 0.1f, 0.0f));
-        glUniformMatrix4fv(viewLoc, 1, GL_FALSE, glm::value_ptr(view));
+        //view = glm::mat4(1.0f);
+        //view = glm::translate(view, glm::vec3(-1.0f + 0.50f * (float)(m_viewport[3]) / (float)(m_viewport[2]), 1.0f - 0.1f, 0.0f));
+        //glUniformMatrix4fv(viewLoc, 1, GL_FALSE, glm::value_ptr(view));
 
         //glBindVertexArray(r2.VAO);
-        glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, 0);
+        //glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, 0);
+        glDrawArraysInstanced(GL_TRIANGLES, 0, 6, 100);
         // glfw: swap buffers and poll IO events (keys pressed/released, mouse moved etc.)
         // -------------------------------------------------------------------------------
         glfwSwapBuffers(window);
         glfwPollEvents();
     }
 }
-
 
 }  // namespace CowRender
