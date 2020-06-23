@@ -65,10 +65,14 @@ std::unique_ptr<GLFWwindow, DeleteGLFWwindow> InitGLFW() {
     //glfwSetFramebufferSizeCallback(window, framebuffer_size_callback);
     std::cout << "a" << std::endl;
     glEnable(GL_DEPTH_TEST);
+    glEnable(GL_TEXTURE_2D);
     return window;
 }
 
 void framebuffer_size_callback(GLFWwindow* window, int width, int height) {
+    if(height&1){
+        height-=1;
+    }
     glViewport(0, 0, width, height);
     std::cout << "window resized to (w, h): "
               << "( " << width << ", " << height << ") " << std::endl;
@@ -97,13 +101,13 @@ void DrawQuad2(RenderUnit::RenderUnit& r) {
             translation.y = (float)y / 10.0f + offset;
             if(index%3 == 0){
                 translation.z = 0;
-                translation.w = 0;
+                translation.w = 31;
             } else if(index%3==1){
                 translation.z = 0;
                 translation.w = 31;
             } else {
-                translation.z = 1;
-                translation.w = 0;
+                translation.z = 0;
+                translation.w = 31;
             }
             //translation.x =
             translations[index++] = translation;
@@ -129,17 +133,12 @@ void DrawQuad2(RenderUnit::RenderUnit& r) {
         -0.1f, 0.1f, 0.0f, 0.0f, 1.0f,    // top left
         0.1f, -0.1f, 0.0f, 1.0f, 0.0f,   // bottom right
     };
-    //float vertices[] = {
-    //    0.5f, 0.5f, 0.0f,   // top right
-    //    0.5f, -0.5f, 0.0f,  // bottom right
-    //    0.0f, -0.5f, 0.0f,  // bottom left
-    //    0.0f, 0.5f, 0.0f    // top left
+
+    //unsigned int indices[] = {
+    //    // note that we start from 0!
+    //    0, 1, 3,  // first triangle
+    //    1, 2, 3   // second triangle
     //};
-    unsigned int indices[] = {
-        // note that we start from 0!
-        0, 1, 3,  // first triangle
-        1, 2, 3   // second triangle
-    };
     std::cout << "DEBUG" << __LINE__ << std::endl;
     RenderUnit::RenderUnit ru;
     RenderUnit::SetVertexData(ru, vertices, 30, 5);
@@ -165,9 +164,6 @@ void DrawQuad2(RenderUnit::RenderUnit& r) {
     r = ru;
 }
 
-void Draw2(GLFWwindow* window, Shader& shader) {
-}
-
 void Draw(GLFWwindow* window, Shader& shader) {
     std::cout << "Draw" << std::endl;
 
@@ -184,11 +180,15 @@ void Draw(GLFWwindow* window, Shader& shader) {
     glGenTextures(1, &texture1);
     glBindTexture(GL_TEXTURE_2D, texture1);
 
-    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_MIRRORED_REPEAT);
-    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_MIRRORED_REPEAT);
+    //glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_MIRRORED_REPEAT);
+    //glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_MIRRORED_REPEAT);
+    glTexParameteri( GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP);
+    glTexParameteri( GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP);
 
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
+
+    //glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAX_LEVEL, max_mipmap_level);
 
     int width, height, nrChannels;
     stbi_set_flip_vertically_on_load(true);
@@ -227,60 +227,18 @@ void Draw(GLFWwindow* window, Shader& shader) {
         glGetIntegerv(GL_VIEWPORT, m_viewport);
         std::cout << "viewport: " << m_viewport[0] << " " << m_viewport[1] << " " << m_viewport[2] << " " << m_viewport[3] << std::endl;
         unsigned int spriteLoc = glGetUniformLocation(shader.ID, "spriteLoc");
-        //int test[] = {0, 1};
-        //glUniform1iv(spriteLoc, 2, test);
-
-        //glBindTexture(GL_TEXTURE_2D, texture1);
 
         glm::mat4 model = glm::mat4(1.0f);
         model = glm::scale(model, glm::vec3((float)(m_viewport[3]) / (float)(m_viewport[2]), 1.0f, 1.0f));
         int modelLoc = glGetUniformLocation(shader.ID, "model");
         glUniformMatrix4fv(modelLoc, 1, GL_FALSE, glm::value_ptr(model));
         glm::mat4 view = glm::mat4(1.0f);
-        //view = glm::translate(view, glm::vec3(-1.0f + 0.1f * (float)(m_viewport[3]) / (float)(m_viewport[2]), 1.0f - 0.1f, 0.0f));
 
         int viewLoc = glGetUniformLocation(shader.ID, "view");
 
         glUniformMatrix4fv(viewLoc, 1, GL_FALSE, glm::value_ptr(view));
 
-        // input
-        // -----
-        //processInput(window);
-
-        // render
-        // ------
-        //glActiveTexture(GL_TEXTURE);
-        //glBindTexture(GL_TEXTURE_2D, texture1);
-
-        // draw our first triangle
-        //glUseProgram(shaderProgram);
         glBindVertexArray(r.VAO);  // seeing as we only have a single VAO there's no need to bind it every time, but we'll do so to keep things a bit more organized
-        //glDrawArrays(GL_TRIANGLES, 0, 6);
-        //glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, 0);
-
-        //model = glm::mat4(1.0f);
-        //model = glm::scale(model, glm::vec3((float)(m_viewport[3]) / (float)(m_viewport[2]), 1.0f, 1.0f));
-        //glUniformMatrix4fv(modelLoc, 1, GL_FALSE, glm::value_ptr(model));
-
-        //view = glm::mat4(1.0f);
-        //view = glm::translate(view, glm::vec3(-1.0f + 0.30f * (float)(m_viewport[3]) / (float)(m_viewport[2]), 1.0f - 0.1f, 0.0f));
-        //glUniformMatrix4fv(viewLoc, 1, GL_FALSE, glm::value_ptr(view));
-        //test[0]=0;
-        //test[1]=0;
-        //glUniform1iv(spriteLoc, 2, test);
-
-        //glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, 0);
-
-        //test[0]=0;
-        //test[1]=31;
-        //glUniform1iv(spriteLoc, 2, test);
-
-        //view = glm::mat4(1.0f);
-        //view = glm::translate(view, glm::vec3(-1.0f + 0.50f * (float)(m_viewport[3]) / (float)(m_viewport[2]), 1.0f - 0.1f, 0.0f));
-        //glUniformMatrix4fv(viewLoc, 1, GL_FALSE, glm::value_ptr(view));
-
-        //glBindVertexArray(r2.VAO);
-        //glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, 0);
         glDrawArraysInstanced(GL_TRIANGLES, 0, 6, 100);
         // glfw: swap buffers and poll IO events (keys pressed/released, mouse moved etc.)
         // -------------------------------------------------------------------------------

@@ -14,11 +14,13 @@ namespace CowGraphics {
         uint32_t Width, Height;
         std::vector<uint16_t> SpriteData;
     };
-    std::size_t EmplaceSprite(SpriteSheet* sheet, uint16_t xPos, uint16_t yPos, uint16_t width, uint16_t height){
-        sheet->SpriteData.push_back(xPos);
-        sheet->SpriteData.push_back(yPos);
-        sheet->SpriteData.push_back(width);
-        sheet->SpriteData.push_back(height);
+    std::size_t EmplaceSprite(SpriteSheet& sheet, uint16_t xPos, uint16_t yPos, uint16_t width, uint16_t height){
+        std::size_t location = sheet.SpriteData.size();
+        sheet.SpriteData.push_back(xPos);
+        sheet.SpriteData.push_back(yPos);
+        sheet.SpriteData.push_back(width);
+        sheet.SpriteData.push_back(height);
+        return location;
     }
 
     void DrawSprite(SpriteSheet& sheet, int location){
