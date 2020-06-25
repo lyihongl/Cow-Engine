@@ -79,6 +79,7 @@ class TypeMap {
 struct Component {
     uint32_t UniqueID;
     uint32_t CompID;
+    uint32_t EntityID;
     uint32_t Version;
 };
 
@@ -96,7 +97,7 @@ struct ComponentManager {
     unsigned int uniqueKey{1};
 
     template <typename T>
-    void MapComponent(uint32_t EntityID, T& c);
+    void MapComponent(uint32_t EntityID, Component& c);
 };
 
 struct ComponentContainer {
@@ -113,9 +114,10 @@ uint32_t ComponentManager::Register() {
 }
 
 template <typename T>
-void ComponentManager::MapComponent(uint32_t EntityID, T& c) {
+void ComponentManager::MapComponent(uint32_t EntityID, Component& c) {
     auto result = TMap.find<T>();
     if (result != TMap.end()) {
+        c.EntityID = EntityID;
         std::size_t index = result->second;
         Components[index - 1]->data.push_back(c);
     }

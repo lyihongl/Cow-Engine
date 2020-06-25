@@ -78,18 +78,6 @@ void framebuffer_size_callback(GLFWwindow* window, int width, int height) {
               << "( " << width << ", " << height << ") " << std::endl;
 }
 void DrawQuad2(RenderUnit::RenderUnit& r) {
-    //float vertices[] = {
-    //    -0.5f, 0.5f, 0.0f,   // top right
-    //    -0.1f, -0.5f, 0.0f,  // bottom right
-    //    -0.5f, -0.5f, 0.0f,  // bottom left
-    //    -0.5f, 0.5f, 0.0f    // top left
-    //};
-    //float vertices[] = {
-    //    0.1f, 0.1f, 0.0f,    // top right
-    //    0.1f, -0.1f, 0.0f,   // bottom right
-    //    -0.1f, -0.1f, 0.0f,  // bottom left
-    //    -0.1f, 0.1f, 0.0f    // top left
-    //};
 
     glm::vec4 translations[100];
     int index = 0;
